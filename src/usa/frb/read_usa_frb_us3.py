@@ -19,8 +19,8 @@ with ZipFile(io.BytesIO(requests.get(URL).content)) as archive:
     # =========================================================================
     # Select the Largest File Containing the Most of the Data
     # =========================================================================
-    _map = {_.file_size: _.filename for _ in archive.filelist}
-    with archive.open(_map[max(_map)]) as f:
+    MAP_FILES = {_.file_size: _.filename for _ in archive.filelist}
+    with archive.open(MAP_FILES[max(MAP_FILES)]) as f:
         tree = etree.parse(f)
         doc = tree.getroot()
 

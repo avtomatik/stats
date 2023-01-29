@@ -1,3 +1,4 @@
+from pathlib import Path
 from zipfile import ZipFile
 
 import pandas as pd
@@ -5,12 +6,14 @@ import pandas as pd
 pd.options.display.max_columns = 8
 
 
-with ZipFile('FRB_g17.zip') as archive:
-    _map = {_.file_size: _.filename for _ in archive.filelist}
+DIR = '/home/green-machine/data_science/data/external'
+FILE_NAME = 'FRB_g17.zip'
+with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
+    MAP_FILES = {_.file_size: _.filename for _ in archive.filelist}
     # =====================================================================
     # Select the Largest File
     # =====================================================================
-    with archive.open(_map[max(_map)]) as f:
+    with archive.open(MAP_FILES[max(MAP_FILES)]) as f:
         df = pd.read_xml(
             f,
             xpath=".//frb:DataSet",
@@ -24,4 +27,4 @@ with ZipFile('FRB_g17.zip') as archive:
             skiprows=4
         ).dropna(axis=1, how='all').transpose()
         df.drop(df.index[:3], inplace=True)
-        return df.rename_axis('period')
+        # return df.rename_axis('period')

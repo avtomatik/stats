@@ -7,12 +7,42 @@ Created on Sat Oct 22 12:28:16 2022
 """
 
 
-import pandas as pd
+import xml.etree.ElementTree as et
+from pathlib import Path, PosixPath
+from typing import Union
+from zipfile import ZipFile
 
-filepath_or_buffer = 'FRB_G17(2).csv'
-filepath_or_buffer = 'FRB_G17(3).csv'
+import pandas as pd
+from pandas import DataFrame
+
+
+def read_usa_frb(filepath: Union[str, PosixPath]) -> DataFrame:
+    with ZipFile(filepath) as archive:
+        MAP_FILES = {_.filename: _.file_size for _ in archive.filelist}
+        # =====================================================================
+        # Select the Largest File
+        # =====================================================================
+        with archive.open(max(MAP_FILES, key=MAP_FILES.get)) as f:
+            # =================================================================
+            # TODO: Further Development
+            # =================================================================
+            df = pd.read_csv(f, skiprows=4)
+            df.dropna(axis=1, how='all', inplace=True)
+            df.set_index(df.columns[0], inplace=True)
+            df = df.transpose()
+            df = df.drop(df.index[:3])
+            return df.rename_axis('period')
+            xtree = et.parse(MAP_FILES[max(MAP_FILES.keys())])
+            xroot = xtree.getroot()
+
+
+DIR = '/home/green-machine/data_science/data/external'
+FILE_NAME = 'frb_g17_2.csv'
+FILE_NAME = 'frb_g17_3.csv'
+# FILE_NAME = 'FRB_H15.zip'
+
 SERIES_ID = 'CAPUTL.B00004.S'
-kwargs = {'filepath_or_buffer': filepath_or_buffer}
+kwargs = {'filepath_or_buffer': Path(DIR).joinpath(FILE_NAME)}
 # =====================================================================
 # Load
 # =====================================================================
@@ -33,21 +63,4 @@ SERIES_IDS = (
 df_a = df.loc[:, SERIES_IDS].groupby(df.index.year).mean()
 df.groupby(df.index.year).mean().plot(grid=True)
 
-
-FILE_NAME = 'FRB_H15.zip'
-# def read_usa_frb() -> DataFrame:
-#    with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
-#        _map = {_.file_size: _.filename for _ in archive.filelist}
-#        print(_map[max(_map.keys())])
-#        # =====================================================================
-#        # Select the Largest File
-#        # =====================================================================
-#        with archive.open(_map[max(_map.keys())]) as f:
-#            df = pd.read_csv(f, skiprows=4)
-#            df.dropna(axis=1, how='all', inplace=True)
-#            df.set_index(df.columns[0], inplace=True)
-#            df = df.transpose()
-#            df = df.drop(df.index[:3])
-#            return df.rename_axis('period')
-#            xtree = et.parse(_map[max(_map.keys())])
-#            xroot = xtree.getroot()
+read_usa_frb(Path(DIR).joinpath(FILE_NAME))
