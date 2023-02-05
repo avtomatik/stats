@@ -6,6 +6,7 @@ Created on Tue Nov  2 21:10:29 2021
 """
 
 import pandas as pd
+
 from sklearn.metrics import r2_score
 
 
@@ -71,7 +72,7 @@ SERIES_IDS = (
 # combined = combined.iloc[:, [-1]]
 # df = pd.concat([df, combined], axis=1)
 # # combined.plot(grid=True).get_figure().savefig('view.pdf', format='pdf', dpi=900)
-# # combined.to_csv(Path(_DIR).joinpath('df.csv'))
+# # combined.to_csv(Path(DIR_EXPORT).joinpath('df.csv'))
 
 FILE_NAME = 'stat_can_cap.csv'
 # data = read_temporary(FILE_NAME)
@@ -97,7 +98,7 @@ FILE_NAME = 'stat_can_cap.csv'
 #             },
 #             ignore_index=True
 #         )
-# df.to_csv(Path(_DIR).joinpath('df.csv'), index=False)
+# df.to_csv(Path(DIR_EXPORT).joinpath('df.csv'), index=False)
 # =============================================================================
 
 # # combined = DataFrame()
@@ -138,7 +139,7 @@ SERIES_IDS = (
 # combined = combined.div(combined.loc[1997]).mul(100)
 # combined.plot(grid=True).get_figure().savefig(
 #     'view.pdf', format='pdf', dpi=900)
-# combined.to_csv(Path(_DIR).joinpath('df.csv'))
+# combined.to_csv(Path(DIR_EXPORT).joinpath('df.csv'))
 
 
 # =============================================================================
