@@ -11,7 +11,7 @@ from io import BytesIO, StringIO
 import pandas as pd
 import requests
 
-url_root = "https://download.bls.gov/pub/time.series/cu"
+url_root = 'https://download.bls.gov/pub/time.series/cu'
 
 contents_table = """9/13/2018  8:31 AM     38073676 cu.data.0.Current
 9/13/2018  8:31 AM      2791094 cu.data.1.AllItems
@@ -44,38 +44,38 @@ bls_urls = (
     # =========================================================================
     # More Recent
     # =========================================================================
-    "https://download.bls.gov/pub/time.series/ap/ap.df.0.Current",
-    "https://download.bls.gov/pub/time.series/pc/pc.df.0.Current",
-    "https://download.bls.gov/pub/time.series/pc/pc.df.01.aggregates",
+    'https://download.bls.gov/pub/time.series/ap/ap.df.0.Current',
+    'https://download.bls.gov/pub/time.series/pc/pc.df.0.Current',
+    'https://download.bls.gov/pub/time.series/pc/pc.df.01.aggregates',
     # =========================================================================
     # Previous
     # =========================================================================
-    "https://download.bls.gov/pub/time.series/compressed/tape.format/bls.pc.date201807.gz",
-    "https://download.bls.gov/pub/time.series/compressed/tape.format/bls.wp.date201807.gz",
-    "https://download.bls.gov/pub/time.series/pc/pc.data.0.Current",
-    "https://download.bls.gov/pub/time.series/wp/wp.data.0.Current",
-    "https://www.bls.gov/opub/ted/2011/ted_20110224.htm",
+    'https://download.bls.gov/pub/time.series/compressed/tape.format/bls.pc.date201807.gz',
+    'https://download.bls.gov/pub/time.series/compressed/tape.format/bls.wp.date201807.gz',
+    'https://download.bls.gov/pub/time.series/pc/pc.data.0.Current',
+    'https://download.bls.gov/pub/time.series/wp/wp.data.0.Current',
+    'https://www.bls.gov/opub/ted/2011/ted_20110224.htm',
 )
 
 
 if __name__ == '__main__':
     kwargs = {
-        "compression": 'gzip',
-        "header": 0,
-        "sep": ' ',
-        "quotechar": '"',
-        "error_bad_lines": False
+        'compression': 'gzip',
+        'header': 0,
+        'sep': ' ',
+        'quotechar': '"',
+        'error_bad_lines': False
     }
 
-    for line in contents_table.split("\n"):
+    for line in contents_table.split('\n'):
         df = pd.read_csv(
             BytesIO(
-                requests.get("/".join((url_root, line.split()[-1]))).content
+                requests.get('/'.join((url_root, line.split()[-1]))).content
             )
         )
 
     for url in bls_urls:
         # print(requests.get(url).text)
         print(requests.get(url).content)
-        kwargs["filepath_or_buffer"] = StringIO(requests.get(url).content)
+        kwargs['filepath_or_buffer'] = StringIO(requests.get(url).content)
         print(pd.read_csv(**kwargs))

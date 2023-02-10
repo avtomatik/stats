@@ -49,14 +49,14 @@ def main():
     # # Product
     # # =============================================================================
     # # =============================================================================
-    # # v21573668 # Not Useful: Real Gross Domestic Product
-    # # v142817 # Not Useful: Capacity Utilization
-    # # v37482 # Not Useful: Capacity Utilization
-    # # v4331088 # Not Useful: Capacity Utilization
-    # # v41713056 # Not Useful: Capital Input
-    # # v41713073 # Not Useful: Capital Input
-    # # v41707775 # Not Useful: Capital Input
-    # # v42189387 # Not Useful: Capital Input
+    # # {'v21573668': 36100207} # Not Useful: Real Gross Domestic Product
+    # # {'v142817': 16100111} # Not Useful: Capacity Utilization
+    # # {'v37482': 10100094} # Not Useful: Capacity Utilization
+    # # {'v4331088': 16100109} # Not Useful: Capacity Utilization
+    # # {'v41713056': 36100208} # Not Useful: Capital Input
+    # # {'v41713073': 36100208} # Not Useful: Capital Input
+    # # {'v41707775': 36100309} # Not Useful: Capital Input
+    # # {'v42189387': 36100310} # Not Useful: Capital Input
     # # =============================================================================
     # df = DataFrame()
     # combined = DataFrame()
@@ -66,9 +66,9 @@ def main():
     # # Capital cost
     # # =============================================================================
     # SERIES_IDS = (
-    #     'v41713243',
-    #     'v41708375',
-    #     'v42189907',
+    #     'v41713243': 36100208,
+    #     'v41708375': 36100309,
+    #     'v42189907': 36100310,
     # )
     # combined = data.loc[:, SERIES_IDS].dropna(how="all")
     # combined = combined.div(combined.loc[1997]).mul(100)
@@ -112,20 +112,20 @@ def main():
     # # # Manufacturing Indexes
     # # # =============================================================================
     # # # =============================================================================
-    # # # v11567 # Production Indexes
-    # # # v41707475 # Production Indexes
-    # # # v41708195 # Gross Output
-    # # # v42189127 # Production Indexes
-    # # # v42189751 # Gross Output
-    # # # v64602050 # Gross Output
-    # # # v86718697 # Production Indexes
-    # # # v86719219 # Gross Output
+    # # # {'v11567': 36100386} # Production Indexes
+    # # # {'v41707475': 36100309} # Production Indexes
+    # # # {'v41708195': 36100309} # Gross Output
+    # # # {'v42189127': 36100310} # Production Indexes
+    # # # {'v42189751': 36100310} # Gross Output
+    # # # {'v64602050': 36100488} # Gross Output
+    # # # {'v86718697': 36100217} # Production Indexes
+    # # # {'v86719219': 36100217} # Gross Output
     # # # =============================================================================
     # # # SERIES_IDS = (
-    # # #     'v86718697',
-    # # #     'v41707475',
-    # # #     'v42189127',
-    # # #     'v11567',
+    # # #     'v86718697': 36100217,
+    # # #     'v41707475': 36100309,
+    # # #     'v42189127': 36100310,
+    # # #     'v11567': 36100386,
     # # # )
     # # # combined = data.loc[:, SERIES_IDS].dropna(how="all")
     # # # combined = combined.div(combined.loc[1961]).mul(100)
@@ -134,10 +134,10 @@ def main():
     # # # # Gross Output
     # # # # =============================================================================
     # # # SERIES_IDS = (
-    # # #     'v86719219',
-    # # #     'v41708195',
-    # # #     'v42189751',
-    # # #     'v64602050',
+    # # #     'v86719219': 36100217,
+    # # #     'v41708195': 36100309,
+    # # #     'v42189751': 36100310,
+    # # #     'v64602050': 36100488,
     # # # )
     # # # combined = data.loc[:, SERIES_IDS].dropna(how="all")
     # # # combined = combined.div(combined.loc[1997]).mul(100)
@@ -168,20 +168,20 @@ def main():
 
     FILE_NAME = 'stat_can_cap.csv'
     data = read_temporary(FILE_NAME)
-    SERIES_IDS = (
-        'v46444624',
-        'v46444685',
-        'v46444746',
-        'v46444990',
-        'v46445051',
-        'v46445112',
-        'v46445356',
-        'v46445417',
-        'v46445478',
-        'v46445722',
-        'v46445783',
-        'v46445844',
-    )
+    SERIES_IDS = {
+        'v46444624': 36100210,
+        'v46444685': 36100210,
+        'v46444746': 36100210,
+        'v46444990': 36100210,
+        'v46445051': 36100210,
+        'v46445112': 36100210,
+        'v46445356': 36100210,
+        'v46445417': 36100210,
+        'v46445478': 36100210,
+        'v46445722': 36100210,
+        'v46445783': 36100210,
+        'v46445844': 36100210,
+    }
     for series_id in SERIES_IDS[::3]:
         chunk = data.loc[:, (series_id,)].dropna(axis=0, how='all')
         chunk.plot(grid=True)

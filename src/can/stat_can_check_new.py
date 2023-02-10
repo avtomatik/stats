@@ -49,7 +49,7 @@ def get_archive_names(file_name: str, path_src: str = '../stat_can') -> set[str]
 
     """
     df = pd.read_excel(Path(path_src).joinpath(file_name))
-    return set(map_except(url_to_archive_name, df.loc[:, "ref"], IndexError))
+    return set(map_except(url_to_archive_name, df.loc[:, 'ref'], IndexError))
 
 
 def main(
@@ -80,18 +80,18 @@ def main(
     # =========================================================================
 
     snapshots_available = sorted(
-        filter(lambda _: _.endswith(".xlsx"), os.listdir(Path(path_src)))
+        filter(lambda _: _.endswith('.xlsx'), os.listdir(Path(path_src)))
     )
 
     archive_names_available = get_archive_names(snapshots_available[-1])
 
     archive_names_seen = get_archive_names(snapshots_available[-2]) \
-        if check_option == "snapshots" \
+        if check_option == 'snapshots' \
         else {
         set(
             filter(
-                lambda _: _.endswith("-eng.zip"),
-                os.listdir(Path(path_src).parent.joinpath("data/external"))
+                lambda _: _.endswith('-eng.zip'),
+                os.listdir(Path(path_src).parent.joinpath('data/external'))
             )
         )
     }
@@ -100,12 +100,12 @@ def main(
         archive_names_available - archive_names_seen
     )
     if archive_names_to_check:
-        print("You Might Want to Check Those New Archives")
+        print('You Might Want to Check Those New Archives')
         for archive_name in archive_names_to_check:
             print('/'.join((url_root, archive_name)))
     else:
-        print("No New Archives Since the Last Snapshot/Download")
+        print('No New Archives Since the Last Snapshot/Download')
 
 
 if __name__ == '__main__':
-    main("snapshots")
+    main('snapshots')
