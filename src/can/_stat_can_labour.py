@@ -6,39 +6,30 @@ Created on Tue Nov  2 21:10:29 2021
 """
 
 
-from lib.collect import construct_deflator, stockpile_usa_hist
-from lib.read import read_temporary
-
-
-def prices_cobb_douglas():
-    SERIES_IDS = {
-        'CDT2S1': 'dataset_usa_cobb-douglas.zip',
-        'CDT2S3': 'dataset_usa_cobb-douglas.zip'
-    }
-    return stockpile_usa_hist(SERIES_IDS).pipe(construct_deflator)
-
-
-def prices_uscb():
-    SERIES_IDS = {
-        'P0107': 'dataset_uscb.zip',
-        'P0110': 'dataset_uscb.zip'
-    }
-    return stockpile_usa_hist(SERIES_IDS).pipe(construct_deflator)
+from lib.tools import construct_usa_hist_deflator
 
 
 def main():
     DIR = '/media/green-machine/KINGSTON'
     DIR_EXPORT = '/media/green-machine/KINGSTON'
 
-    # =========================================================================
+    # =============================================================================
     # CALLS = (
     #     # =========================================================================
-    #     # prices_cobb_douglas,
-    #     # prices_uscb,
+    #     # construct_usa_hist_deflator(
+    #     #     {
+    #     #         'CDT2S1': 'dataset_usa_cobb-douglas.zip',
+    #     #         'CDT2S3': 'dataset_usa_cobb-douglas.zip'
+    #     #     }
+    #     # ),
+    #     # construct_usa_hist_deflator(
+    #     #     {'P0107': 'dataset_uscb.zip', 'P0110': 'dataset_uscb.zip'}
+    #     # ),
     #     # =========================================================================
     #     collect_can_price_a,
     #     collect_can_price_b,
     # )
+
     # data = pd.concat([call() for call in CALLS], axis=1)
     # data['mean'] = data.mean(axis=1)
     # data['cum_mean'] = df.iloc[:, -1].add(1).cumprod()
@@ -60,8 +51,7 @@ def main():
     # # =============================================================================
     # df = DataFrame()
     # combined = DataFrame()
-    FILE_NAME = 'stat_can_prd.csv'
-    # data = read_temporary(FILE_NAME)
+
     # # =============================================================================
     # # Capital cost
     # # =============================================================================
@@ -70,7 +60,7 @@ def main():
     #     'v41708375': 36100309,
     #     'v42189907': 36100310,
     # )
-    # combined = data.loc[:, SERIES_IDS].dropna(how="all")
+    # combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
     # combined = combined.div(combined.loc[1997]).mul(100)
     # combined['mean_comb'] = combined.mean(axis=1)
     # combined = combined.iloc[:, [-1]]
@@ -106,8 +96,7 @@ def main():
     # =========================================================================
 
     # # combined = DataFrame()
-    FILE_NAME = 'stat_can_prd.csv'
-    # # data = read_temporary(FILE_NAME)
+
     # # # =============================================================================
     # # # Manufacturing Indexes
     # # # =============================================================================
@@ -121,25 +110,25 @@ def main():
     # # # {'v86718697': 36100217} # Production Indexes
     # # # {'v86719219': 36100217} # Gross Output
     # # # =============================================================================
-    # # # SERIES_IDS = (
+    # # # SERIES_IDS = {
     # # #     'v86718697': 36100217,
     # # #     'v41707475': 36100309,
     # # #     'v42189127': 36100310,
     # # #     'v11567': 36100386,
-    # # # )
-    # # # combined = data.loc[:, SERIES_IDS].dropna(how="all")
+    # # # }
+    # # # combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
     # # # combined = combined.div(combined.loc[1961]).mul(100)
 
     # # # # =============================================================================
     # # # # Gross Output
     # # # # =============================================================================
-    # # # SERIES_IDS = (
+    # # # SERIES_IDS = {
     # # #     'v86719219': 36100217,
     # # #     'v41708195': 36100309,
     # # #     'v42189751': 36100310,
     # # #     'v64602050': 36100488,
-    # # # )
-    # # # combined = data.loc[:, SERIES_IDS].dropna(how="all")
+    # # # }
+    # # # combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
     # # # combined = combined.div(combined.loc[1997]).mul(100)
     # # # combined.plot(grid=True).get_figure().savefig(
     # # #     'view.pdf', format='pdf', dpi=900)
@@ -166,8 +155,6 @@ def main():
     # data = data[data.iloc[:, 6] != 'Intellectual property products']
     # # data.dropna(axis=0, how='all').to_csv(Path(DIR).joinpath(FILE_NAME), index=True)
 
-    FILE_NAME = 'stat_can_cap.csv'
-    data = read_temporary(FILE_NAME)
     SERIES_IDS = {
         'v46444624': 36100210,
         'v46444685': 36100210,
@@ -182,18 +169,16 @@ def main():
         'v46445783': 36100210,
         'v46445844': 36100210,
     }
-    for series_id in SERIES_IDS[::3]:
-        chunk = data.loc[:, (series_id,)].dropna(axis=0, how='all')
-        chunk.plot(grid=True)
+    for series_id in tuple(SERIES_IDS)[::3]:
+        stockpile_can({series_id: SERIES_IDS[series_id]}).plot(grid=True)
 
         # chunk.plot(grid=True).get_figure().savefig(
         #     'temporary.pdf', format='pdf', dpi=900)
-    # for series_id in SERIES_IDS[1::3]:
-    #     chunk = data.loc[:, (series_id,)].dropna(axis=0, how='all')
-    #     chunk.plot(grid=True)
-    # for series_id in SERIES_IDS[2::3]:
-    #     chunk = data.loc[:, (series_id,)].dropna(axis=0, how='all')
-    #     chunk.plot(grid=True)
+    # for series_id in tuple(SERIES_IDS)[1::3]:
+    #     stockpile_can({series_id: SERIES_IDS[series_id]}).plot(grid=True)
+
+    # for series_id in tuple(SERIES_IDS)[2::3]:
+    #     stockpile_can({series_id: SERIES_IDS[series_id]}).plot(grid=True)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,6 @@ from zipfile import ZipFile
 import pandas as pd
 from lib.collect import get_mean_for_min_std
 from lib.pull import pull_by_series_id
-from lib.read import read_temporary
 from lib.transform import transform_sum
 from pandas import DataFrame
 
@@ -29,6 +28,60 @@ from pandas import DataFrame
 # {'!v65522415': 36100489} # Not Useful
 # =============================================================================
 path_src = '/home/green-machine/data_science/data/external'
+
+
+def pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
+    """
+
+
+    Parameters
+    ----------
+    df : DataFrame
+        ================== =================================
+        df.index           Period
+        df.iloc[:, 0]      Series IDs
+        df.iloc[:, 1]      Values
+        ================== =================================
+    series_id : str
+
+    Returns
+    -------
+    DataFrame
+        ================== =================================
+        df.index           Period
+        df.iloc[:, 0]      Series
+        ================== =================================
+    """
+    assert df.shape[1] == 2
+    return df[df.iloc[:, 0] == series_id].iloc[:, [1]].rename(
+        columns={"value": series_id}
+    )
+
+
+def transform_sum(df: DataFrame, name: str) -> DataFrame:
+    """
+
+
+    Parameters
+    ----------
+    df : DataFrame
+        ================== =================================
+        df.index           Period
+        df.iloc[:, ...]    Series
+        ================== =================================
+    name : str
+        New Column Name.
+
+    Returns
+    -------
+    DataFrame
+        ================== =================================
+        df.index           Period
+        df.iloc[:, 0]      Sum of <series_ids>
+        ================== =================================
+    """
+    df[name] = df.sum(axis=1)
+    return df.iloc[:, [-1]]
 
 
 @cache
@@ -104,6 +157,8 @@ def read_can(archive_id: int) -> DataFrame:
         36100303: {'period': 0, 'series_id': 9, 'value': 11},
         36100305: {'period': 0, 'series_id': 9, 'value': 11},
         16100053: {'period': 0, 'series_id': 9, 'value': 11},
+        36100207: {'period': 0, 'series_id': 9, 'value': 11},
+        14100235: {'period': 0, 'series_id': 8, 'value': 10}
     }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
     kwargs = {
@@ -111,7 +166,7 @@ def read_can(archive_id: int) -> DataFrame:
         'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
         'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
-        'parse_dates': archive_id in (2820011, 3790031, 3800084, 36100108, 36100434)
+        'parse_dates': archive_id in (2820011, 3790031, 3800084, 36100108, 36100207, 36100434, 14100235, 14100355)
     }
     if archive_id < 10 ** 7:
         kwargs['filepath_or_buffer'] = f'{archive_id:08n}-eng.zip'
@@ -162,18 +217,11 @@ def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
     )
 
 
-def shadow_append(df, series_ids):
-    data = df.loc[:, series_ids].dropna(how="all")
-    data["_".join((*series_ids, "sum"))] = data.sum(axis=1)
-    return data
+def mean_series_id(df: DataFrame) -> DataFrame:
+    return df.groupby(df.index.year).mean()
 
 
 os.chdir(path_src)
-
-result = DataFrame()
-combined = DataFrame()
-FILE_NAME = 'stat_can_prd.csv'
-data = read_temporary(FILE_NAME)
 
 
 SERIES_IDS = {
@@ -181,6 +229,7 @@ SERIES_IDS = {
     'v718173': 36100303,
     'v719421': 36100305,  # Total number of jobs
 }
+
 combined = stockpile_can(SERIES_IDS)
 
 
@@ -190,6 +239,7 @@ SERIES_IDS = {
     'v535663': 16100053,
     'v535677': 16100053,
 }
+
 combined = pd.concat(
     [
         combined,
@@ -200,30 +250,29 @@ combined = pd.concat(
 )
 
 
-FILE_NAME = 'stat_can_lab.csv'
-data = read_temporary(FILE_NAME)
 SERIES_IDS = {
     'v74989': 14100235,
     'v2057609': 14100355,
     'v123355112': 14100355,
     'v2057818': 14100355,
 }
-combined = data.loc[:, SERIES_IDS].dropna(how="all")
+
+combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
 combined = combined.div(combined.loc[1982]).mul(100)
 combined['mean'] = combined.mean(axis=1)
-result = pd.concat([result, combined.iloc[:, [-1]]], axis=1)
-
-
-combined = DataFrame()
-FILE_NAME = 'stat_can_prd.csv'
-data = read_temporary(FILE_NAME)
+result = combined.iloc[:, [-1]]
 
 
 SERIES_IDS = {
     'v21573686': 36100207,  # Total number of jobs
     'v111382232': 36100480,  # Total number of jobs
 }
-combined = data.loc[:, SERIES_IDS].dropna(how="all")
+
+
+print(stockpile_can(SERIES_IDS).info())
+combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+print(combined)
+
 SERIES_IDS = {
     'v761808': 16100054,
     'v761927': 16100054,
@@ -238,8 +287,6 @@ combined = pd.concat(
     ],
     axis=1
 )
-FILE_NAME = 'stat_can_lab.csv'
-data = read_temporary(FILE_NAME)
 
 
 SERIES_IDS = {
@@ -249,13 +296,15 @@ SERIES_IDS = {
     'v78931172': 14100243,
     'v65521825': 36100489
 }
-combined = data.loc[:, SERIES_IDS].dropna(how="all")
+
+combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
 
 
 SERIES_IDS = {
     'v249703': 14100265,
     'v250265': 14100265,
 }
+
 combined = pd.concat(
     [
         combined,
@@ -264,10 +313,12 @@ combined = pd.concat(
     ],
     axis=1
 )
+
 SERIES_IDS = {
     'v78931174': 14100243,
     'v78931173': 14100243,
 }
+
 combined = pd.concat(
     [
         combined,
@@ -281,17 +332,17 @@ combined['mean'] = combined.mean(axis=1)
 result = pd.concat([result, combined.iloc[:, [-1]]], axis=1)
 
 
-combined = DataFrame()
-FILE_NAME = 'stat_can_lab.csv'
-data = read_temporary(FILE_NAME)
 SERIES_IDS = {
     'v1235071986': 14100392,
 }
-combined = data.loc[:, SERIES_IDS].dropna(how="all")
+
+combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+
 SERIES_IDS = {
     'v54027148': 14100221,
     'v54027152': 14100221,
 }
+
 combined = pd.concat(
     [
         combined,
@@ -308,49 +359,59 @@ result = pd.concat([result, combined.iloc[:, [-1]]], axis=1)
 result = result.div(result.iloc[result.index.get_loc(2001), :]).mul(100)
 result['mean_comb'] = result.mean(axis=1)
 result = result.iloc[:, [-1]]
+
+
 year, value = get_mean_for_min_std()
 result['workers'] = result.div(result.loc[year, :]).mul(value)
 result = result.iloc[:, [-1]].round(1)
 result.plot(grid=True)
 os.chdir(path_export)
+# =============================================================================
 # .get_figure().savefig('view_canada.pdf', format='pdf', dpi=900)
 # result.to_excel('result.xlsx')
-#
+# =============================================================================
 
 
 FILE_NAME = 'series_ids.xlsx'
 data = pd.read_excel(Path(path_src).joinpath(FILE_NAME))
 data.dropna(axis=0, how='all', inplace=True)
 data.dropna(axis=1, how='all', inplace=True)
+# =============================================================================
 # data.to_excel('series_ids.xlsx', index=False)
+# =============================================================================
 
 data.fillna('None', inplace=True)
 version = sorted(data.iloc[:, 0].unique())[0]
 chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
 chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
-initial = set(chunk.iloc[:, 0])
+SERIES_IDS_INIT = set(chunk.iloc[:, 0])
 version = sorted(data.iloc[:, 0].unique())[2]
 chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
 chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
-refactd = set(chunk.iloc[:, 0])
-# for item in sorted(initial and refactd):
-#     print(item)
+SERIES_IDS_FINAL = set(chunk.iloc[:, 0])
+# =============================================================================
+# for series_id in sorted(SERIES_IDS_INIT and SERIES_IDS_FINAL):
+#     print(series_id)
+# =============================================================================
 
-
+# =============================================================================
+# Test Series IDS
+# =============================================================================
 FILE_NAME = 'stat_can_cap.csv'
-data = pd.read_csv(Path(path_src).joinpath(FILE_NAME))
-a = set(data.T.index)
-a.remove('REF_DATE')
+SERIES_IDS_CAP = set(
+    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
+)
+
 FILE_NAME = 'stat_can_lab.csv'
-data = pd.read_csv(Path(path_src).joinpath(FILE_NAME))
-b = set(data.T.index)
-b.remove('REF_DATE')
+SERIES_IDS_LAB = set(
+    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
+)
+
 FILE_NAME = 'stat_can_prd.csv'
-data = pd.read_csv(Path(path_src).joinpath(FILE_NAME))
-c = set(data.T.index)
-c.remove('REF_DATE')
+SERIES_IDS_PRD = set(
+    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
+)
 
-
-a -= refactd
-b -= refactd
-c -= refactd
+SERIES_IDS_CAP -= SERIES_IDS_FINAL
+SERIES_IDS_LAB -= SERIES_IDS_FINAL
+SERIES_IDS_PRD -= SERIES_IDS_FINAL

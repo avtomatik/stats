@@ -201,7 +201,7 @@ def main(
     # =========================================================================
     # Retrieve Series Description
     # =========================================================================
-    _df = pd.concat(
+    df = pd.concat(
         [
             read_temporary(file_name)
             for file_name in FILE_NAMES
@@ -211,7 +211,7 @@ def main(
 
     desc = pd.merge(
         read_temporary(file_name),
-        _df.transpose(),
+        df.transpose(),
         left_index=True,
         right_index=True,
     )
