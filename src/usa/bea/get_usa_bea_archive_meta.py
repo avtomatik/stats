@@ -59,7 +59,7 @@ def grab_usa_bea_archive_meta(df: DataFrame, wb_name: str, sheet_name: str) -> D
 
 def main(
     path_src: str = '/media/green-machine/KINGSTON',
-    path_dsn: str = '/home/green-machine/Downloads',
+    path_export: str = '/home/green-machine/Downloads',
     archive_name: str = 'dataset_usa_bea-release-2015-02-27-SectionAll_xls_1969_2015.zip',
     file_name: str = 'usa_bea_release-2015-02-27_meta.xlsx'
 ) -> None:
@@ -78,7 +78,7 @@ def main(
                 )
             df = pd.concat([df, chunk])
 
-    df.to_excel(Path(path_dsn).joinpath(file_name), index=False)
+    df.to_excel(Path(path_export).joinpath(file_name), index=False)
 
 
 if __name__ == '__main__':

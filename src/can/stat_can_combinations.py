@@ -13,9 +13,8 @@ import pandas as pd
 # =============================================================================
 # TODO: What?
 # =============================================================================
-df = pd.read_csv(filepath_or_buffer, skiprows=range(1, 7))
-df.columns = ('period', 'REF_DATE')
-df.set_index(df.columns[0], inplace=True)
+df = pd.read_csv(filepath_or_buffer, skiprows=range(1, 7), index_col=0)
+
 matches = []
 for pair in combinations(df.columns, 2):
     chunk = df.loc[:, list(pair)].dropna(axis=0)
