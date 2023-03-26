@@ -42,7 +42,7 @@ def collect_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
 
     df = pd.read_csv(**kwargs)
     df = df[df.iloc[:, 1] ==
-            'International Monetary Fund, World Economic Outlook Database, April %d' % (year_base,)]
+            f'International Monetary Fund, World Economic Outlook Database, April {year_base}']
     df = df[df.iloc[:, 3] == 'CAN']
     return pd.concat(
         [
