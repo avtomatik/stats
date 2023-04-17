@@ -6,7 +6,7 @@ import pandas as pd
 pd.options.display.max_columns = 8
 
 
-DIR = '/home/green-machine/data_science/data/external'
+DIR = '../data/external'
 FILE_NAME = 'FRB_g17.zip'
 with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
     MAP_FILES = {_.file_size: _.filename for _ in archive.filelist}

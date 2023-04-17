@@ -238,7 +238,7 @@ BLUEPRINT_PRODUCT = {
 
 def main(
     series_ids: dict[str, int],
-    path_src: str = '/home/green-machine/data_science/data/external',
+    path_src: str = '../data/external',
     file_name: str = 'stat_can_desc.csv'
 ):
     # =========================================================================

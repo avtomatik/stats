@@ -27,7 +27,7 @@ from pandas import DataFrame
 # {'!v65522120': 36100489} # Not Useful
 # {'!v65522415': 36100489} # Not Useful
 # =============================================================================
-path_src = '/home/green-machine/data_science/data/external'
+path_src = '../data/external'
 
 
 def pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:

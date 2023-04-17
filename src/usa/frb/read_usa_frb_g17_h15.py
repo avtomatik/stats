@@ -36,7 +36,7 @@ def read_usa_frb(filepath: Union[str, PosixPath]) -> DataFrame:
             xroot = xtree.getroot()
 
 
-DIR = '/home/green-machine/data_science/data/external'
+DIR = '../data/external'
 FILE_NAME = 'frb_g17_2.csv'
 FILE_NAME = 'frb_g17_3.csv'
 # FILE_NAME = 'FRB_H15.zip'

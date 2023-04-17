@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DIR = '/home/green-machine/data_science/macroeconomics'
+DIR = '../macroeconomics'
 kwargs = {
     'sep': '\t',
     'index_col': range(4),
