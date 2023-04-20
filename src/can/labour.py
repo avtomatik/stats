@@ -7,117 +7,25 @@ Created on Tue Nov  2 21:10:29 2021
 
 
 import os
-from functools import cache
 from pathlib import Path
-from zipfile import ZipFile
 
 import pandas as pd
-from lib.collect import get_mean_for_min_std
-from lib.pull import pull_by_series_id
-from lib.transform import transform_sum
-from pandas import DataFrame
+
+from stats.src.can.collect import stockpile_can
+from stats.src.can.get_mean_for_min_std import get_mean_for_min_std
+from stats.src.can.transform import mean_series_id, transform_sum
 
 # =============================================================================
 # Labor
 # =============================================================================
-# =============================================================================
-# {'!v41707595': 36100309} # Not Useful: Labour input
-# {'!v41712954': 36100208} # Not Useful: Labour input
-# {'!v42189231': 36100310} # Not Useful: Labour input
-# {'!v65522120': 36100489} # Not Useful
-# {'!v65522415': 36100489} # Not Useful
-# =============================================================================
+SERIES_IDS = {
+    '!v41707595': 36100309,  # Not Useful: Labour input
+    '!v41712954': 36100208,  # Not Useful: Labour input
+    '!v42189231': 36100310,  # Not Useful: Labour input
+    '!v65522120': 36100489,  # Not Useful
+    '!v65522415': 36100489,  # Not Useful
+}
 path_src = '../data/external'
-
-
-def pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
-    """
-
-
-    Parameters
-    ----------
-    df : DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, 0]      Series IDs
-        df.iloc[:, 1]      Values
-        ================== =================================
-    series_id : str
-
-    Returns
-    -------
-    DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, 0]      Series
-        ================== =================================
-    """
-    assert df.shape[1] == 2
-    return df[df.iloc[:, 0] == series_id].iloc[:, [1]].rename(
-        columns={"value": series_id}
-    )
-
-
-def transform_sum(df: DataFrame, name: str) -> DataFrame:
-    """
-
-
-    Parameters
-    ----------
-    df : DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, ...]    Series
-        ================== =================================
-    name : str
-        New Column Name.
-
-    Returns
-    -------
-    DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, 0]      Sum of <series_ids>
-        ================== =================================
-    """
-    df[name] = df.sum(axis=1)
-    return df.iloc[:, [-1]]
-
-
-def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
-    """
-
-
-    Parameters
-    ----------
-    series_ids : dict[str, int]
-        DESCRIPTION.
-
-    Returns
-    -------
-    DataFrame
-        ================== =================================
-        df.index           Period
-        ...                ...
-        df.iloc[:, -1]     Values
-        ================== =================================
-
-    """
-    return pd.concat(
-        [
-            read_can(archive_id).pipe(
-                pull_by_series_id, series_id
-            )
-            for series_id, archive_id in series_ids.items()
-        ],
-        axis=1,
-        verify_integrity=True,
-        sort=True
-    )
-
-
-def mean_series_id(df: DataFrame) -> DataFrame:
-    return df.groupby(df.index.year).mean()
 
 
 os.chdir(path_src)
@@ -297,19 +205,25 @@ SERIES_IDS_FINAL = set(chunk.iloc[:, 0])
 # Test Series IDS
 # =============================================================================
 FILE_NAME = 'stat_can_cap.csv'
-SERIES_IDS_CAP = set(
-    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
-)
+kwargs = {
+    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
+    'index_col': 0
+}
+SERIES_IDS_CAP = set(pd.read_csv(**kwargs).columns)
 
 FILE_NAME = 'stat_can_lab.csv'
-SERIES_IDS_LAB = set(
-    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
-)
+kwargs = {
+    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
+    'index_col': 0
+}
+SERIES_IDS_LAB = set(pd.read_csv(**kwargs).columns)
 
 FILE_NAME = 'stat_can_prd.csv'
-SERIES_IDS_PRD = set(
-    pd.read_csv(Path(path_src).joinpath(file_name), index_col=0).columns
-)
+kwargs = {
+    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
+    'index_col': 0
+}
+SERIES_IDS_PRD = set(pd.read_csv(**kwargs).columns)
 
 SERIES_IDS_CAP -= SERIES_IDS_FINAL
 SERIES_IDS_LAB -= SERIES_IDS_FINAL

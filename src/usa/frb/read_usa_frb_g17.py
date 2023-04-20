@@ -14,17 +14,20 @@ with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
     # Select the Largest File
     # =====================================================================
     with archive.open(MAP_FILES[max(MAP_FILES)]) as f:
-        df = pd.read_xml(
-            f,
-            xpath=".//frb:DataSet",
-            namespaces={
-                "kf": "http://www.federalreserve.gov/structure/compact/G17_IP_MAJOR_INDUSTRY_GROUPS"}
-        )
+        kwargs = {
+            'path_or_buffer': f,
+            'xpath': ".//frb:DataSet",
+            'namespaces': {
+                "kf": "http://www.federalreserve.gov/structure/compact/G17_IP_MAJOR_INDUSTRY_GROUPS"
+            }
+        }
+        df = pd.read_xml(**kwargs)
         df.to_excel('test.xlsx', index=False)
-        df = pd.read_xml(
-            f,
-            index_col=0,
-            skiprows=4
-        ).dropna(axis=1, how='all').transpose()
+        kwargs = {
+            'path_or_buffer': f,
+            'index_col': 0,
+            'skiprows': 4
+        }
+        df = pd.read_xml(**kwargs).dropna(axis=1, how='all').transpose()
         df.drop(df.index[:3], inplace=True)
         # return df.rename_axis('period')

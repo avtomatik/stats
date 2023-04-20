@@ -1,3 +1,15 @@
+SERIES_IDS_CD = {
+    'CDT2S1': 'dataset_usa_cobb-douglas.zip',
+    'CDT2S3': 'dataset_usa_cobb-douglas.zip'
+}
+
+
+SERIES_IDS_PRCH = {
+    'P0107': 'dataset_uscb.zip',
+    'P0110': 'dataset_uscb.zip'
+}
+
+
 # =============================================================================
 # Capital
 # =============================================================================
@@ -315,7 +327,7 @@ DATA_CONSTRUCT_CAN_FORMER_NOT_USED = {
     # =========================================================================
     # Labor
     # =========================================================================
-    "Labor":     {
+    "Labor": {
         "table": 2820011,
         "title": "Labour Force Survey estimates (LFS), employment by class of worker, North American Industry Classification System (NAICS) and sex, unadjusted for seasonality",
         "geo": "Canada",
@@ -401,3 +413,35 @@ DATA_STATCAN_ARCHIVE = (
         "title": "Flows and stocks of fixed non-residential capital, by industry and type of asset, Canada, provinces and territories"
     }
 )
+
+
+# =============================================================================
+# Gross fixed capital formation Data Block
+# =============================================================================
+# =============================================================================
+# Not Clear:
+# =============================================================================
+{
+    "table": 3800068,
+    "title": "Gross fixed capital formation",
+    "geo": "Canada",
+    "prices": "Chained (2007) dollars",
+    "seas": "Seasonally adjusted at annual rates",
+    "estimates": "Industrial machinery and equipment (x 1,000,000)",
+    "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
+    "series_id": "v62143969"
+}
+
+# =============================================================================
+# Not Clear:
+# =============================================================================
+{
+    "table": 3800068,
+    "title": "Gross fixed capital formation",
+    "geo": "Canada",
+    "prices": "Chained (2007) dollars",
+    "seas": "Seasonally adjusted at annual rates",
+    "estimates": "Industrial machinery and equipment (x 1,000,000)",
+    "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
+    "series_id": "v62143990"
+}

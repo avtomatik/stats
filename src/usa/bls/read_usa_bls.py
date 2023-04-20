@@ -68,11 +68,10 @@ if __name__ == '__main__':
     }
 
     for line in contents_table.split('\n'):
-        df = pd.read_csv(
-            BytesIO(
-                requests.get('/'.join((url_root, line.split()[-1]))).content
-            )
-        )
+        _kwargs = {
+            'filepath_or_buffer': BytesIO(requests.get('/'.join((url_root, line.split()[-1]))).content)
+        }
+        df = pd.read_csv(**_kwargs)
 
     for url in bls_urls:
         # print(requests.get(url).text)

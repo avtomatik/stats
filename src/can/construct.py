@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pandas as pd
 
+from stats.src.can.collect import stockpile_can
 from stats.src.can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
                                      BLUEPRINT_PRODUCT)
-from stats.src.can.labour import stockpile_can
 
 
 def main(

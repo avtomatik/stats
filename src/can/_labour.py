@@ -6,7 +6,7 @@ Created on Tue Nov  2 21:10:29 2021
 """
 
 
-from lib.tools import construct_usa_hist_deflator
+from stats.src.can.collect import stockpile_can
 
 
 def main():
@@ -14,41 +14,20 @@ def main():
     DIR_EXPORT = '/media/green-machine/KINGSTON'
 
     # =============================================================================
-    # CALLS = (
-    #     # =========================================================================
-    #     # construct_usa_hist_deflator(
-    #     #     {
-    #     #         'CDT2S1': 'dataset_usa_cobb-douglas.zip',
-    #     #         'CDT2S3': 'dataset_usa_cobb-douglas.zip'
-    #     #     }
-    #     # ),
-    #     # construct_usa_hist_deflator(
-    #     #     {'P0107': 'dataset_uscb.zip', 'P0110': 'dataset_uscb.zip'}
-    #     # ),
-    #     # =========================================================================
-    #     collect_can_price_a,
-    #     collect_can_price_b,
-    # )
-
-    # data = pd.concat([call() for call in CALLS], axis=1)
-    # data['mean'] = data.mean(axis=1)
-    # data['cum_mean'] = df.iloc[:, -1].add(1).cumprod()
-    # data = data.div(data.loc[2012])
-    # =========================================================================
-
-    # # =============================================================================
-    # # Product
-    # # =============================================================================
-    # # =============================================================================
-    # # {'v21573668': 36100207} # Not Useful: Real Gross Domestic Product
-    # # {'v142817': 16100111} # Not Useful: Capacity Utilization
-    # # {'v37482': 10100094} # Not Useful: Capacity Utilization
-    # # {'v4331088': 16100109} # Not Useful: Capacity Utilization
-    # # {'v41713056': 36100208} # Not Useful: Capital Input
-    # # {'v41713073': 36100208} # Not Useful: Capital Input
-    # # {'v41707775': 36100309} # Not Useful: Capital Input
-    # # {'v42189387': 36100310} # Not Useful: Capital Input
-    # # =============================================================================
+    # Product
+    # =============================================================================
+    # =============================================================================
+    SERIES_IDS = {
+        'v21573668': 36100207,  # Not Useful: Real Gross Domestic Product
+        'v142817': 16100111,  # Not Useful: Capacity Utilization
+        'v37482': 10100094,  # Not Useful: Capacity Utilization
+        'v4331088': 16100109,  # Not Useful: Capacity Utilization
+        'v41713056': 36100208,  # Not Useful: Capital Input
+        'v41713073': 36100208,  # Not Useful: Capital Input
+        'v41707775': 36100309,  # Not Useful: Capital Input
+        'v42189387': 36100310,  # Not Useful: Capital Input
+    }
+    # =============================================================================
     # df = DataFrame()
     # combined = DataFrame()
 
@@ -97,18 +76,20 @@ def main():
 
     # # combined = DataFrame()
 
-    # # # =============================================================================
-    # # # Manufacturing Indexes
-    # # # =============================================================================
-    # # # =============================================================================
-    # # # {'v11567': 36100386} # Production Indexes
-    # # # {'v41707475': 36100309} # Production Indexes
-    # # # {'v41708195': 36100309} # Gross Output
-    # # # {'v42189127': 36100310} # Production Indexes
-    # # # {'v42189751': 36100310} # Gross Output
-    # # # {'v64602050': 36100488} # Gross Output
-    # # # {'v86718697': 36100217} # Production Indexes
-    # # # {'v86719219': 36100217} # Gross Output
+    # =============================================================================
+    # Manufacturing Indexes
+    # =============================================================================
+    # =============================================================================
+    SERIES_IDS = {
+        'v11567': 36100386,  # Production Indexes
+        'v41707475': 36100309,  # Production Indexes
+        'v41708195': 36100309,  # Gross Output
+        'v42189127': 36100310,  # Production Indexes
+        'v42189751': 36100310,  # Gross Output
+        'v64602050': 36100488,  # Gross Output
+        'v86718697': 36100217,  # Production Indexes
+        'v86719219': 36100217,  # Gross Output
+    }
     # # # =============================================================================
     # # # SERIES_IDS = {
     # # #     'v86718697': 36100217,
@@ -138,7 +119,7 @@ def main():
     # FILE_NAME = 'stat_can_cap.csv'
     # data = read_temporary(FILE_NAME)
     # combined = pd.concat(
-    #     [data.iloc[:, [_]].dropna(axis=0) for _ in range(30, 35)],
+    #     map(lambda _: data.iloc[:, [_]].dropna(axis=0), range(30, 35)),
     #     axis=1
     # )
     # combined = combined.div(combined.loc[1997]).mul(100)
@@ -172,8 +153,8 @@ def main():
     for series_id in tuple(SERIES_IDS)[::3]:
         stockpile_can({series_id: SERIES_IDS[series_id]}).plot(grid=True)
 
-        # chunk.plot(grid=True).get_figure().savefig(
-        #     'temporary.pdf', format='pdf', dpi=900)
+    # chunk.plot(grid=True).get_figure().savefig(
+    #     'temporary.pdf', format='pdf', dpi=900)
     # for series_id in tuple(SERIES_IDS)[1::3]:
     #     stockpile_can({series_id: SERIES_IDS[series_id]}).plot(grid=True)
 

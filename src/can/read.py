@@ -268,3 +268,16 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
             # =============================================================================
             pass
     return pd.read_csv(**kwargs)
+
+
+# =============================================================================
+# Not Clear
+# =============================================================================
+def read_can_special() -> DataFrame:
+    kwargs = {
+        'filepath_or_buffer': 'dataset_read_can-{:08n}-eng-{}.csv'.format(
+            310003, 7591839622055840674
+        ),
+        'skiprows': 3,
+    }
+    return pd.read_csv(**kwargs)
