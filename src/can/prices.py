@@ -9,7 +9,8 @@ Created on Tue Nov  2 21:10:29 2021
 # =============================================================================
 # Product
 # =============================================================================
-# =============================================================================
+from stats.src.can.stockpile import stockpile_can
+
 SERIES_IDS = {
     'v21573668': 36100207,  # Not Useful: Real Gross Domestic Product
     'v142817': 16100111,  # Not Useful: Capacity Utilization
@@ -20,8 +21,7 @@ SERIES_IDS = {
     'v41707775': 36100309,  # Not Useful: Capital Input
     'v42189387': 36100310,  # Not Useful: Capital Input
 }
-# # =============================================================================
-# df = DataFrame()
+# # df = DataFrame()
 # combined = DataFrame()
 
 # # =============================================================================
@@ -51,7 +51,6 @@ FILE_NAME = 'stat_can_cap.csv'
 # data = read_temporary(FILE_NAME)
 #
 #
-# =============================================================================
 # df = DataFrame(columns=['series_id_1', 'series_id_2', 'r_2'])
 # for pair in combinations(data.columns, 2):
 #     chunk = data.loc[:, list(pair)].dropna(axis=0)
@@ -65,7 +64,6 @@ FILE_NAME = 'stat_can_cap.csv'
 #             ignore_index=True
 #         )
 # df.to_csv(Path(DIR_EXPORT).joinpath('df.csv'), index=False)
-# =============================================================================
 
 # # combined = DataFrame()
 
@@ -107,7 +105,6 @@ SERIES_IDS = {
 # combined.to_csv(Path(DIR_EXPORT).joinpath('df.csv'))
 
 
-# =============================================================================
 FILE_NAME = 'stat_can_cap.csv'
 # data = read_temporary(FILE_NAME)
 # combined = pd.concat(
@@ -119,7 +116,6 @@ FILE_NAME = 'stat_can_cap.csv'
 # combined = combined.iloc[:, [-1]]
 # df = pd.concat([df, combined], axis=1)
 # df.plot(grid=True).get_figure().savefig('view.pdf', format='pdf', dpi=900)
-# =============================================================================
 
 FILE_NAME = 'stat_can_cap_matching.csv'
 # data = read_temporary(FILE_NAME)

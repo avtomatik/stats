@@ -8,9 +8,7 @@ from pathlib import Path
 import pandas as pd
 from pandas import DataFrame
 
-# =============================================================================
-# from lib.pull import pull_by_series_id
-# =============================================================================
+from stats.src.can.pull import pull_by_series_id
 
 DIR = "/media/green-machine/KINGSTON"
 
@@ -29,7 +27,7 @@ def pull_imf_can_gdp_by_series_id(df, series_id):
     return chunk
 
 
-def collect_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
+def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
     # =========================================================================
     # TODO: Refactor
     # =========================================================================
@@ -53,31 +51,6 @@ def collect_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
         ],
         axis=1,
         sort=True
-    )
-
-
-def pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
-    """
-    Parameters
-    ----------
-    df : DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, 0]      Series IDs
-        df.iloc[:, 1]      Values
-        ================== =================================
-    series_id : str
-    Returns
-    -------
-    DataFrame
-        ================== =================================
-        df.index           Period
-        df.iloc[:, 0]      Series
-        ================== =================================
-    """
-    assert df.shape[1] == 2
-    return df[df.iloc[:, 0] == series_id].iloc[:, [1]].rename(
-        columns={"value": series_id}
     )
 
 
@@ -137,4 +110,4 @@ df['real_rebased'] = df.iloc[:, 1].mul(df.iloc[:, -1])
 
 df.to_csv('dataset_can_CANSIM.csv')
 
-df = collect_imf_can_gdp_for_year_base(2015)
+df = combine_imf_can_gdp_for_year_base(2015)

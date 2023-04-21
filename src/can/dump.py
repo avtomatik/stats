@@ -1,7 +1,7 @@
 
 from stats.src.can.read import read_can_group_a, read_can_group_b
-from thesis.src.lib.collect import stockpile_can
 from thesis.src.lib.pull import transform_agg_sum
+from thesis.src.lib.stockpile import stockpile_can
 from thesis.src.lib.transform import transform_agg_sum
 
 read_can_group_a(7931814471809016759, skiprows=241)

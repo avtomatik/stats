@@ -21,13 +21,12 @@ def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
         ================== =================================
     """
     return pd.concat(
-        [
-            read_can(archive_id).pipe(
-                pull_by_series_id, series_id
-            )
-            for series_id, archive_id in series_ids.items()
-        ],
+        map(
+            lambda _: read_can(_[1]).pipe(
+                pull_by_series_id, _[0]
+            ),
+            series_ids.items()
+        ),
         axis=1,
-        verify_integrity=True,
         sort=True
     )

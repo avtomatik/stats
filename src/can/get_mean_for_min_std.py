@@ -1,4 +1,4 @@
-from thesis.src.lib.collect import stockpile_can
+from thesis.src.lib.stockpile import stockpile_can
 
 
 def get_mean_for_min_std():
