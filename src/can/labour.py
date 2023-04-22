@@ -13,7 +13,7 @@ import pandas as pd
 
 from stats.src.can.get_mean_for_min_std import get_mean_for_min_std
 from stats.src.can.stockpile import stockpile_can
-from stats.src.can.transform import mean_series_id, transform_sum
+from stats.src.lib.transform import transform_sum, transform_year_mean
 
 # =============================================================================
 # Labor
@@ -64,7 +64,7 @@ SERIES_IDS = {
     'v2057818': 14100355,
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
 combined = combined.div(combined.loc[1982]).mul(100)
 combined['mean'] = combined.mean(axis=1)
 result = combined.iloc[:, [-1]]
@@ -77,7 +77,7 @@ SERIES_IDS = {
 
 
 print(stockpile_can(SERIES_IDS).info())
-combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
 print(combined)
 
 SERIES_IDS = {
@@ -104,7 +104,7 @@ SERIES_IDS = {
     'v65521825': 36100489
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
 
 
 SERIES_IDS = {
@@ -143,7 +143,7 @@ SERIES_IDS = {
     'v1235071986': 14100392,
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(mean_series_id)
+combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
 
 SERIES_IDS = {
     'v54027148': 14100221,
