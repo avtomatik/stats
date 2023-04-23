@@ -6,15 +6,13 @@ Created on Tue Nov  2 21:10:29 2021
 """
 
 
-from itertools import combinations
 from pathlib import Path
 
 import pandas as pd
 from pandas import DataFrame
-from sklearn.metrics import r2_score
+from stats.src.lib.transform import transform_year_mean
 
 from stats.src.can.stockpile import stockpile_can
-from stats.src.lib.transform import transform_year_mean
 
 # =============================================================================
 # Product
@@ -57,23 +55,7 @@ combined.plot(grid=True).get_figure().savefig(
     'view.pdf', format='pdf', dpi=900)
 
 data = combined
-FILE_NAME = 'stat_can_cap.csv'
-data = read_temporary(FILE_NAME)
 
-
-df = DataFrame(columns=['series_id_1', 'series_id_2', 'r_2'])
-for pair in combinations(data.columns, 2):
-    chunk = data.loc[:, list(pair)].dropna(axis=0)
-    if not chunk.empty:
-        df = df.append(
-            {
-                'series_id_1': pair[0],
-                'series_id_2': pair[1],
-                'r_2': r2_score(chunk.iloc[:, 0], chunk.iloc[:, 1])
-            },
-            ignore_index=True
-        )
-df.to_csv(Path(DIR_EXPORT).joinpath('df.csv'), index=False)
 
 combined = DataFrame()
 
