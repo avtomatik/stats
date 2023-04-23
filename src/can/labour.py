@@ -10,10 +10,10 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from stats.src.lib.transform import transform_sum, transform_year_mean
 
 from stats.src.can.get_mean_for_min_std import get_mean_for_min_std
 from stats.src.can.stockpile import stockpile_can
+from stats.src.common.transform import transform_sum, transform_year_mean
 
 # =============================================================================
 # Labor

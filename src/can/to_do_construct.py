@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pandas as pd
 from pandas import DataFrame
-from stats.src.lib.transform import transform_year_mean
 
 from stats.src.can.stockpile import stockpile_can
+from stats.src.common.transform import transform_year_mean
 
 # =============================================================================
 # Product
