@@ -1,8 +1,8 @@
 import pandas as pd
-from thesis.src.lib.tools import construct_usa_hist_deflator
 
 from stats.src.can.combine import combine_can_price_a, combine_can_price_b
 from stats.src.can.constants import SERIES_IDS_CD, SERIES_IDS_PRCH
+from thesis.src.lib.tools import construct_usa_hist_deflator
 
 df = pd.concat(
     map(construct_usa_hist_deflator, (SERIES_IDS_CD, SERIES_IDS_PRCH)),
