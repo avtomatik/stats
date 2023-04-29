@@ -14,10 +14,10 @@ def dump(path_exp: str, file_name: str, data: dict) -> None:
 
 DIR_EXP = '/home/green-machine/Downloads'
 
-FILE_NAME = 'construct_can_former.yaml'
+FILE_NAME = 'combine_can_former.yaml'
 dump(DIR_EXP, FILE_NAME, DATA_CONSTRUCT_CAN_FORMER)
 
-FILE_NAME = 'construct_can_former_not_used.yaml'
+FILE_NAME = 'combine_can_former_not_used.yaml'
 dump(DIR_EXP, FILE_NAME, DATA_CONSTRUCT_CAN_FORMER_NOT_USED)
 
 FILE_NAME = 'statcan_archive.yaml'

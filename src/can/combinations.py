@@ -13,6 +13,8 @@ import pandas as pd
 from pandas import DataFrame
 from sklearn.metrics import r2_score
 
+from thesis.src.lib.read import read_temporary
+
 # =============================================================================
 # TODO: What?
 # =============================================================================

@@ -13,6 +13,7 @@ import pandas as pd
 from stats.src.can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
                                      BLUEPRINT_PRODUCT)
 from stats.src.can.stockpile import stockpile_can
+from thesis.src.lib.read import read_temporary
 
 
 def main(
@@ -33,13 +34,12 @@ def main(
         axis=1
     )
 
-    desc = pd.merge(
+    pd.merge(
         read_temporary(file_name),
         df.transpose(),
         left_index=True,
         right_index=True,
-    )
-    desc.transpose().to_csv(Path(path_src).joinpath(file_name))
+    ).transpose().to_csv(Path(path_src).joinpath(file_name))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import pandas as pd
 
 from thesis.src.lib.plot import plot_can_test
-from thesis.src.lib.pull import pull_by_series_id, transform_agg_sum
+from thesis.src.lib.pull import pull_by_series_id
 from thesis.src.lib.read import read_can
 from thesis.src.lib.transform import transform_agg_sum
 
@@ -44,7 +44,7 @@ def test_data_can():
             pd.concat(
                 [
                     read_can(_args[0]).pipe(transform_agg_sum, _args[1])
-                    for _args in ARGS[:3]
+                    for _args in SERIES_IDS[:3]
                 ],
                 axis=1,
                 sort=True
@@ -52,7 +52,7 @@ def test_data_can():
             pd.concat(
                 [
                     read_can(_args[0]).pipe(pull_by_series_id, _args[1])
-                    for _args in ARGS[3:]
+                    for _args in SERIES_IDS[3:]
                 ],
                 axis=1,
                 sort=True
