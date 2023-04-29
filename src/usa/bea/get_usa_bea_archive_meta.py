@@ -68,16 +68,19 @@ def main(
         for wb_name in archive.namelist():
             print('{:=^50}'.format('New File'))
             with pd.ExcelFile(archive.open(wb_name)) as xl_file:
-                chunk = pd.concat(
+                df = pd.concat(
                     [
-                        read_usa_bea_meta(xl_file, sheet_name).pipe(
-                            grab_usa_bea_archive_meta, wb_name, sheet_name
+                        df,
+                        pd.concat(
+                            map(
+                                lambda _: read_usa_bea_meta(xl_file, _).pipe(
+                                    grab_usa_bea_archive_meta, wb_name, _
+                                ),
+                                xl_file.sheet_names[1:]
+                            )
                         )
-                        for sheet_name in xl_file.sheet_names[1:]
                     ]
                 )
-            df = pd.concat([df, chunk])
-
     df.to_excel(Path(path_export).joinpath(file_name), index=False)
 
 
