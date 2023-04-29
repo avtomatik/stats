@@ -135,12 +135,8 @@ def read_can_group_a(file_id: int, **kwargs) -> DataFrame:
     kwargs['filepath_or_buffer'] = f'dataset_can_cansim{file_id:n}.csv'
     kwargs['index_col'] = 0
     df = pd.read_csv(**kwargs)
-    if file_id == 7931814471809016759:
-        df.columns = (column[:7] for column in df.columns)
-        df.iloc[:, -1] = pd.to_numeric(df.iloc[:, -1].str.replace(';', ''))
-    df = df.transpose()
     df['period'] = pd.to_numeric(
-        df.index.astype(str).to_series().str.slice(start=3),
+        df.index.astype(str).to_series().str.slice(start=4),
         downcast='integer'
     )
     return df.groupby(df.columns[-1]).mean()
@@ -165,8 +161,12 @@ def read_can_group_b(file_id: int, **kwargs) -> DataFrame:
     kwargs['filepath_or_buffer'] = f'dataset_can_cansim{file_id:n}.csv'
     kwargs['index_col'] = 0
     df = pd.read_csv(**kwargs)
+    if file_id == 7931814471809016759:
+        df.columns = (column[:7] for column in df.columns)
+        df.iloc[:, -1] = pd.to_numeric(df.iloc[:, -1].str.replace(';', ''))
+    df = df.transpose()
     df['period'] = pd.to_numeric(
-        df.index.astype(str).to_series().str.slice(start=4),
+        df.index.astype(str).to_series().str.slice(start=3),
         downcast='integer'
     )
     return df.groupby(df.columns[-1]).mean()
