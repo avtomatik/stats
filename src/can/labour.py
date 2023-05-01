@@ -6,14 +6,304 @@ Created on Tue Nov  2 21:10:29 2021
 """
 
 
+import io
 import os
+from functools import cache
 from pathlib import Path
+from zipfile import ZipFile
 
 import pandas as pd
+import requests
+from pandas import DataFrame
 
+from stats.src.can.constants import (SERIES_IDS_INDEXES, SERIES_IDS_PERSONS,
+                                     SERIES_IDS_THOUSANDS)
 from stats.src.can.get_mean_for_min_std import get_mean_for_min_std
 from stats.src.can.stockpile import stockpile_can
-from stats.src.common.transform import transform_sum, transform_year_mean
+from stats.src.common.transform import transform_year_mean
+from stats.src.common.utils import dichotomize_series_ids
+from thesis.src.lib.transform import transform_sum
+
+
+@cache
+def read_can(archive_id: int) -> DataFrame:
+    """
+
+
+    Parameters
+    ----------
+    archive_id : int
+
+    Returns
+    -------
+    DataFrame
+        ================== =================================
+        df.index           Period
+        ...                ...
+        df.iloc[:, -1]     Values
+        ================== =================================
+    """
+    MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
+    TO_PARSE_DATES = (2820011, 3790031, 3800084, 14100221,
+                      14100235, 14100238, 14100355, 36100108, 36100207, 36100434)
+    MAP = {
+        310004: {
+            'period': 0,
+            'prices': 2,
+            'category': 4,
+            'component': 5,
+            'series_id': 6,
+            'value': 8
+        },
+        2820011: {
+            'period': 0,
+            'geo': 1,
+            'classofworker': 2,
+            'industry': 3,
+            'sex': 4,
+            'series_id': 5,
+            'value': 7
+        },
+        2820012: {'period': 0, 'series_id': 5, 'value': 7},
+        3790031: {
+            'period': 0,
+            'geo': 1,
+            'seas': 2,
+            'prices': 3,
+            'naics': 4,
+            'series_id': 5,
+            'value': 7
+        },
+        3800084: {
+            'period': 0,
+            'geo': 1,
+            'seas': 2,
+            'est': 3,
+            'series_id': 4,
+            'value': 6
+        },
+        3800102: {'period': 0, 'series_id': 4, 'value': 6},
+        3800106: {'period': 0, 'series_id': 3, 'value': 5},
+        3800518: {'period': 0, 'series_id': 4, 'value': 6},
+        3800566: {'period': 0, 'series_id': 3, 'value': 5},
+        3800567: {'period': 0, 'series_id': 4, 'value': 6},
+        14100027: {'period': 0, 'series_id': 10, 'value': 12},
+        36100096: {
+            'period': 0,
+            'geo': 1,
+            'prices': 3,
+            'industry': 4,
+            'category': 5,
+            'component': 6,
+            'series_id': 11,
+            'value': 13
+        },
+        36100434: {'period': 0, 'series_id': 10, 'value': 12}
+    }
+    url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
+
+    kwargs = {
+        'header': 0,
+        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
+        'index_col': 0,
+        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
+        'parse_dates': archive_id in TO_PARSE_DATES
+    }
+    MAP = {
+        14100027: {
+            'period': 0,  # int64
+            'series_id': 10,  # object
+            'value': 12,  # float64
+        },
+        14100221: {
+            'period': 0,  # object
+            'series_id': 10,  # object
+            'value': 12,  # float64
+        },
+        14100235: {
+            'period': 0,  # object
+            'series_id': 8,  # object
+            'value': 10,  # float64
+        },
+        14100238: {
+            'period': 0,  # object
+            'series_id': 8,  # object
+            'value': 10,  # float64
+        },
+        14100243: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        14100265: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        14100355: {
+            'period': 0,  # object
+            'series_id': 10,  # object
+            'value': 12,  # float64
+        },
+        14100392: {
+            'period': 0,  # int64
+            'series_id': 8,  # object
+            'value': 10,  # float64
+        },
+        16100053: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        16100054: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100207: {
+            'period': 0,  # object
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100208: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100303: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100305: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100309: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100310: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100480: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+        36100489: {
+            'period': 0,  # int64
+            'series_id': 9,  # object
+            'value': 11,  # float64
+        },
+    }
+
+    kwargs = {
+        'header': 0,
+        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
+        'index_col': 0,
+        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
+        'parse_dates': archive_id in TO_PARSE_DATES
+    }
+
+    if archive_id < 10 ** 7:
+        kwargs['filepath_or_buffer'] = f'dataset_can_{archive_id:08n}-eng.zip'
+    else:
+        if Path(f'{archive_id:08n}-eng.zip').is_file():
+            kwargs['filepath_or_buffer'] = ZipFile(
+                f'{archive_id:08n}-eng.zip'
+            ).open(f'{archive_id:08n}.csv')
+        else:
+            kwargs['filepath_or_buffer'] = ZipFile(io.BytesIO(
+                requests.get(url).content)
+            ).open(f'{archive_id:08n}.csv')
+    return pd.read_csv(**kwargs)
+
+
+def subroutine(series_ids: dict[str, int]) -> DataFrame:
+    if len(series_ids) > 1:
+        return stockpile_can(series_ids).pipe(
+            transform_sum,
+            name='_'.join((*series_ids, 'sum'))
+        )
+    else:
+        return stockpile_can(series_ids)
+
+
+def combine_can_special(
+    series_ids_plain: dict[str, int],
+    series_ids_mean: dict[str, int]
+) -> DataFrame:
+    if series_ids_plain:
+        return subroutine(series_ids_plain)
+    if series_ids_mean:
+        return subroutine(series_ids_mean).pipe(transform_year_mean)
+
+
+def get_data_frame_index(series_ids: tuple[dict[str, int]]) -> DataFrame:
+    df = pd.concat(
+        map(
+            lambda _: combine_can_special(
+                *dichotomize_series_ids(_, TO_PARSE_DATES)
+            ).pct_change(),
+            series_ids
+        ),
+        axis=1,
+        sort=True
+    )
+    df['mean'] = df.mean(axis=1)
+    # =========================================================================
+    # Composite Index
+    # =========================================================================
+    df['composite'] = df.iloc[:, [-1]].add(1).cumprod()
+    # =========================================================================
+    # Patch First Element
+    # =========================================================================
+    df['composite'] = df['composite'].fillna(1)
+    return df.iloc[:, [-1]]
+
+
+def get_data_frame_value(
+    series_ids_thousands: tuple[dict[str, int]],
+    series_ids_persons: tuple[dict[str, int]]
+) -> DataFrame:
+    df = pd.concat(
+        [
+            pd.concat(
+                map(
+                    lambda _: combine_can_special(
+                        *dichotomize_series_ids(_, TO_PARSE_DATES)
+                    ),
+                    series_ids_thousands
+                ),
+                axis=1
+            ),
+            pd.concat(
+                map(
+                    lambda _: combine_can_special(
+                        *dichotomize_series_ids(_, TO_PARSE_DATES)
+                    ).div(1000),
+                    series_ids_persons
+                ),
+                axis=1
+            )
+        ],
+        axis=1,
+        sort=True
+    )
+    df['mean'] = df.mean(axis=1)
+    return df.iloc[:, [-1]]
+
+
+PATH_SOURCE = '../../../data/external'
+PATH_EXPORT = '/home/green-machine/Downloads'
+
+TO_PARSE_DATES = (2820011, 3790031, 3800084, 14100221, 14100235,
+                  14100238, 14100355, 36100108, 36100207, 36100434)
 
 # =============================================================================
 # Labor
@@ -25,206 +315,36 @@ SERIES_IDS = {
     '!v65522120': 36100489,  # Not Useful
     '!v65522415': 36100489,  # Not Useful
 }
-path_src = '../data/external'
 
 
-os.chdir(path_src)
+os.chdir(PATH_SOURCE)
 
 
-SERIES_IDS = {
-    'v716397': 36100303,  # Total number of jobs
-    'v718173': 36100303,
-    'v719421': 36100305,  # Total number of jobs
-}
+def main(path_export, SERIES_IDS_INDEXES, SERIES_IDS_THOUSANDS, SERIES_IDS_PERSONS):
+    df_index = get_data_frame_index(SERIES_IDS_INDEXES)
 
-combined = stockpile_can(SERIES_IDS)
+    # =============================================================================
+    # df_value = get_data_frame_value(SERIES_IDS_THOUSANDS, SERIES_IDS_PERSONS)
+    # =============================================================================
 
+    df = DataFrame()
 
-SERIES_IDS = {
-    'v535579': 16100053,
-    'v535593': 16100053,
-    'v535663': 16100053,
-    'v535677': 16100053,
-}
+    year, value = get_mean_for_min_std(SERIES_IDS_THOUSANDS)
 
-combined = pd.concat(
-    [
-        combined,
-        stockpile_can(SERIES_IDS).pipe(
-            transform_sum, name='_'.join((*SERIES_IDS, 'sum')))
-    ],
-    axis=1
-)
+    df['workers'] = df_index.div(df_index.loc[year, :]).mul(value)
+    df = df.iloc[:, [-1]].round(1)
+
+    df.plot(grid=True).get_figure().savefig(
+        Path(path_export).joinpath('view_canada.pdf'),
+        format='pdf',
+        dpi=900
+    )
 
 
-SERIES_IDS = {
-    'v74989': 14100235,
-    'v2057609': 14100355,
-    'v123355112': 14100355,
-    'v2057818': 14100355,
-}
-
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-combined = combined.div(combined.loc[1982]).mul(100)
-combined['mean'] = combined.mean(axis=1)
-result = combined.iloc[:, [-1]]
-
-
-SERIES_IDS = {
-    'v21573686': 36100207,  # Total number of jobs
-    'v111382232': 36100480,  # Total number of jobs
-}
-
-
-print(stockpile_can(SERIES_IDS).info())
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-print(combined)
-
-SERIES_IDS = {
-    'v761808': 16100054,
-    'v761927': 16100054,
-}
-
-
-combined = pd.concat(
-    [
-        combined,
-        stockpile_can(SERIES_IDS).pipe(
-            transform_sum, name='_'.join((*SERIES_IDS, 'sum')))
-    ],
-    axis=1
-)
-
-
-SERIES_IDS = {
-    'v249139': 14100265,
-    'v2523013': 14100027,
-    'v1596771': 14100238,
-    'v78931172': 14100243,
-    'v65521825': 36100489
-}
-
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-
-
-SERIES_IDS = {
-    'v249703': 14100265,
-    'v250265': 14100265,
-}
-
-combined = pd.concat(
-    [
-        combined,
-        stockpile_can(SERIES_IDS).pipe(
-            transform_sum, name='_'.join((*SERIES_IDS, 'sum')))
-    ],
-    axis=1
-)
-
-SERIES_IDS = {
-    'v78931174': 14100243,
-    'v78931173': 14100243,
-}
-
-combined = pd.concat(
-    [
-        combined,
-        stockpile_can(SERIES_IDS).pipe(
-            transform_sum, name='_'.join((*SERIES_IDS, 'sum')))
-    ],
-    axis=1
-)
-combined = combined.div(combined.loc[2000]).mul(100)
-combined['mean'] = combined.mean(axis=1)
-result = pd.concat([result, combined.iloc[:, [-1]]], axis=1)
-
-
-SERIES_IDS = {
-    'v1235071986': 14100392,
-}
-
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-
-SERIES_IDS = {
-    'v54027148': 14100221,
-    'v54027152': 14100221,
-}
-
-combined = pd.concat(
-    [
-        combined,
-        stockpile_can(SERIES_IDS).pipe(
-            transform_sum, name='_'.join((*SERIES_IDS, 'sum')))
-    ],
-    axis=1
-)
-combined = combined.div(combined.loc[2006]).mul(100)
-combined['mean'] = combined.mean(axis=1)
-result = pd.concat([result, combined.iloc[:, [-1]]], axis=1)
-
-
-result = result.div(result.iloc[result.index.get_loc(2001), :]).mul(100)
-result['mean_comb'] = result.mean(axis=1)
-result = result.iloc[:, [-1]]
-
-
-year, value = get_mean_for_min_std()
-result['workers'] = result.div(result.loc[year, :]).mul(value)
-result = result.iloc[:, [-1]].round(1)
-result.plot(grid=True)
-os.chdir(path_export)
-# =============================================================================
-# .get_figure().savefig('view_canada.pdf', format='pdf', dpi=900)
-# result.to_excel('result.xlsx')
-# =============================================================================
-
-
-FILE_NAME = 'series_ids.xlsx'
-data = pd.read_excel(Path(path_src).joinpath(FILE_NAME))
-data.dropna(axis=0, how='all', inplace=True)
-data.dropna(axis=1, how='all', inplace=True)
-# =============================================================================
-# data.to_excel('series_ids.xlsx', index=False)
-# =============================================================================
-
-data.fillna('None', inplace=True)
-version = sorted(data.iloc[:, 0].unique())[0]
-chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
-chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
-SERIES_IDS_INIT = set(chunk.iloc[:, 0])
-version = sorted(data.iloc[:, 0].unique())[2]
-chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
-chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
-SERIES_IDS_FINAL = set(chunk.iloc[:, 0])
-# =============================================================================
-# for series_id in sorted(SERIES_IDS_INIT and SERIES_IDS_FINAL):
-#     print(series_id)
-# =============================================================================
-
-# =============================================================================
-# Test Series IDS
-# =============================================================================
-FILE_NAME = 'stat_can_cap.csv'
-kwargs = {
-    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
-    'index_col': 0
-}
-SERIES_IDS_CAP = set(pd.read_csv(**kwargs).columns)
-
-FILE_NAME = 'stat_can_lab.csv'
-kwargs = {
-    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
-    'index_col': 0
-}
-SERIES_IDS_LAB = set(pd.read_csv(**kwargs).columns)
-
-FILE_NAME = 'stat_can_prd.csv'
-kwargs = {
-    'filepath_or_buffer': Path(path_src).joinpath(FILE_NAME),
-    'index_col': 0
-}
-SERIES_IDS_PRD = set(pd.read_csv(**kwargs).columns)
-
-SERIES_IDS_CAP -= SERIES_IDS_FINAL
-SERIES_IDS_LAB -= SERIES_IDS_FINAL
-SERIES_IDS_PRD -= SERIES_IDS_FINAL
+if __name__ == '__main__':
+    main(
+        PATH_EXPORT,
+        SERIES_IDS_INDEXES,
+        SERIES_IDS_THOUSANDS,
+        SERIES_IDS_PERSONS
+    )

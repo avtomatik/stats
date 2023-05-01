@@ -92,12 +92,13 @@ def read_can(archive_id: int) -> DataFrame:
         14100235: {'period': 0, 'series_id': 8, 'value': 10}
     }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
+    TO_PARSE_DATES = (2820011, 3790031, 3800084, 36100108, 36100207, 36100434, 14100235, 14100355)
     kwargs = {
         'header': 0,
         'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
         'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
-        'parse_dates': archive_id in (2820011, 3790031, 3800084, 36100108, 36100207, 36100434, 14100235, 14100355)
+        'parse_dates': archive_id in TO_PARSE_DATES
     }
     if archive_id < 10 ** 7:
         kwargs['filepath_or_buffer'] = f'{archive_id:08n}-eng.zip'
@@ -246,12 +247,13 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
         36100236: {'period': 0, 'series_id': 11, 'value': 13}
     }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
+    TO_PARSE_DATES = (2820011, 3790031, 3800084, 36100108, 36100434)
     kwargs = {
         'header': 0,
         'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
         'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
-        'parse_dates': archive_id in (2820011, 3790031, 3800084, 36100108, 36100434)
+        'parse_dates': archive_id in TO_PARSE_DATES
     }
     if archive_id < 10 ** 7:
         kwargs['filepath_or_buffer'] = f'{archive_id:08n}-eng.zip'

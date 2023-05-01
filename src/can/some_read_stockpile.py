@@ -1,8 +1,7 @@
 
+from stats.src.can.read import read_can_group_a, read_can_group_b
 from thesis.src.lib.stockpile import stockpile_can
 from thesis.src.lib.transform import transform_agg_sum
-
-from stats.src.can.read import read_can_group_a, read_can_group_b
 
 kwargs = {
     'file_id': 5245628780870031920,

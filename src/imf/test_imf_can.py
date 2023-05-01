@@ -63,13 +63,14 @@ def read() -> DataFrame:
         'series_id': 5,
         'value': 7
     }
+    TO_PARSE_DATES = (2820011, 3790031, 3800084, 36100434)
     kwargs = {
         'filepath_or_buffer': Path(DIR).joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
         'header': 0,
         'names': tuple(MAP.keys()),
         'index_col': 0,
         'usecols': tuple(MAP.values()),
-        'parse_dates': ARCHIVE_ID in (2820011, 3790031, 3800084, 36100434)
+        'parse_dates': ARCHIVE_ID in TO_PARSE_DATES
     }
     return pd.read_csv(**kwargs)
 

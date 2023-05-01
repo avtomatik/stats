@@ -9,11 +9,11 @@ Created on Sat Sep 18 22:20:54 2021
 from pathlib import Path
 
 import pandas as pd
-from thesis.src.lib.read import read_temporary
 
 from stats.src.can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
                                      BLUEPRINT_PRODUCT)
 from stats.src.can.stockpile import stockpile_can
+from thesis.src.lib.read import read_temporary
 
 
 def main(

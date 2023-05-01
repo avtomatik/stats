@@ -1,1 +1,5 @@
-def transform_sum():    ...def transform_year_mean():    ...
+from pandas import DataFrame
+
+
+def transform_year_mean(df: DataFrame) -> DataFrame:
+    return df.groupby(df.index.year).mean()

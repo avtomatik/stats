@@ -1,12 +1,19 @@
 import pandas as pd
 
-from stats.src.common.transform import transform_year_mean
-from thesis.src.lib.stockpile import stockpile_can
+from stats.src.common.utils import dichotomize_series_ids
 
 
-def get_mean_for_min_std() -> tuple[int, float]:
+def get_mean_for_min_std(
+    series_ids_reference: tuple[dict[str, int]],
+    source_ids: tuple[int]
+) -> tuple[int, float]:
     """
     Determine Year & Mean Value for Base Series IDs for Year with Minimum Standard Error
+
+    Parameters
+    ----------
+    series_ids_reference : tuple[dict[str, int]]
+        DESCRIPTION.
 
     Returns
     -------
@@ -18,15 +25,13 @@ def get_mean_for_min_std() -> tuple[int, float]:
     # =========================================================================
     # Base Series IDs
     # =========================================================================
-    SERIES_IDS_NO_OPERATION = {'v2523013': 14100027, 'v1235071986': 14100392}
-    SERIES_IDS_TO_TRANSFORM = {
-        'v123355112': 14100355, 'v2057609': 14100355, 'v2057818': 14100355
-    }
     df = pd.concat(
-        [
-            stockpile_can(SERIES_IDS_NO_OPERATION),
-            stockpile_can(SERIES_IDS_TO_TRANSFORM).pipe(transform_year_mean)
-        ],
+        map(
+            lambda _: combine_can_special(
+                *dichotomize_series_ids(_, source_ids)
+            ),
+            series_ids_reference
+        ),
         axis=1,
         sort=True
     ).dropna(axis=0)
