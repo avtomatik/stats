@@ -205,19 +205,19 @@ BLUEPRINT_PRODUCT = {
     'v41713056': 36100208,  # Not Useful: Capital Input
     'v41713073': 36100208,  # Not Useful: Capital Input Capital stock;
     'v41713243': 36100208,
-    'v86718697': 36100217,  # Production Indexes
+    'v86718697': 36100217,  # Manufacturing Indexes
     'v86719219': 36100217,  # Gross Output
     'v716397': 36100303,
     'v718173': 36100303,
     'v719421': 36100305,
-    'v41707475': 36100309,  # Production Indexes
+    'v41707475': 36100309,  # Manufacturing Indexes
     # =========================================================================
     # '!v41707595': 36100309,
     # =========================================================================
     'v41707775': 36100309,  # Not Useful: Capital Input
     'v41708195': 36100309,  # Gross Output
     'v41708375': 36100309,
-    'v42189127': 36100310,  # Production Indexes
+    'v42189127': 36100310,  # Manufacturing Indexes
     # =========================================================================
     # '!v42189231': 36100310,
     # =========================================================================
@@ -228,7 +228,7 @@ BLUEPRINT_PRODUCT = {
     'v328': 36100383,
     'v394': 36100385,
     'v473': 36100385,
-    'v11567': 36100386,  # Production Indexes
+    'v11567': 36100386,  # Manufacturing Indexes
     'v111382232': 36100480,  # Total number of jobs
     # =========================================================================
     # Gross Output :: Output, by sector and industry, provincial and territorial;
@@ -585,3 +585,129 @@ SERIES_IDS_PERSONS = (
     {'v111382232': 36100480},  # Total number of jobs
     {'v65521825': 36100489},
 )
+
+
+MAP_READ_CAN = {
+    310004: {'category': 4, 'component': 5, 'period': 0, 'prices': 2, 'series_id': 6, 'value': 8},
+    2820011: {'classofworker': 2, 'geo': 1, 'industry': 3, 'period': 0, 'series_id': 5, 'sex': 4, 'value': 7},
+    2820012: {'period': 0, 'series_id': 5, 'value': 7},
+    3790031: {'geo': 1, 'naics': 4, 'period': 0, 'prices': 3, 'seas': 2, 'series_id': 5, 'value': 7},
+    3800084: {'est': 3, 'geo': 1, 'period': 0, 'seas': 2, 'series_id': 4, 'value': 6},
+    3800102: {'period': 0, 'series_id': 4, 'value': 6},
+    3800106: {'period': 0, 'series_id': 3, 'value': 5},
+    3800518: {'period': 0, 'series_id': 4, 'value': 6},
+    3800566: {'period': 0, 'series_id': 3, 'value': 5},
+    3800567: {'period': 0, 'series_id': 4, 'value': 6},
+    14100027: {'period': 0, 'series_id': 10, 'value': 12},
+    14100235: {'period': 0, 'series_id': 8, 'value': 10},
+    16100053: {'period': 0, 'series_id': 9, 'value': 11},
+    36100096: {'category': 5, 'component': 6, 'geo': 1, 'industry': 4, 'period': 0, 'prices': 3, 'series_id': 11, 'value': 13},
+    36100207: {'period': 0, 'series_id': 9, 'value': 11},
+    36100303: {'period': 0, 'series_id': 9, 'value': 11},
+    36100305: {'period': 0, 'series_id': 9, 'value': 11},
+    36100434: {'period': 0, 'series_id': 10, 'value': 12}
+}
+
+
+# =============================================================================
+# TODO: Extend
+# =============================================================================
+MAP_READ_CAN_SPC = {
+    10100094: {},
+    14100027: {
+        'period': 0,  # int64
+        'series_id': 10,  # object
+        'value': 12,  # float64
+    },
+    14100221: {
+        'period': 0,  # object
+        'series_id': 10,  # object
+        'value': 12,  # float64
+    },
+    14100235: {
+        'period': 0,  # object
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
+    14100238: {
+        'period': 0,  # object
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
+    14100243: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    14100265: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    14100355: {
+        'period': 0,  # object
+        'series_id': 10,  # object
+        'value': 12,  # float64
+    },
+    14100392: {
+        'period': 0,  # int64
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
+    16100053: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    16100054: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    16100109: {},
+    16100111: {},
+    36100207: {
+        'period': 0,  # object
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100208: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100210: {},
+    36100217: {},
+    36100303: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100305: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100309: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100310: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100386: {},
+    36100480: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+    36100488: {},
+    36100489: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
+}

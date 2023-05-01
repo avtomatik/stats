@@ -3,7 +3,15 @@ from pathlib import Path
 import pandas as pd
 
 
-def sort_series_ids_sets(path_src):
+def get_columns_set(file_name: str, path_src: str) -> set[str]:
+    kwargs = {
+        'filepath_or_buffer': Path(path_src).joinpath(file_name),
+        'index_col': 0
+    }
+    return set(pd.read_csv(**kwargs).columns)
+
+
+def sort_series_ids_sets(path_src: str):
     FILE_NAME = 'series_ids.xlsx'
     data = pd.read_excel(
         Path(path_src).joinpath(FILE_NAME)
@@ -26,15 +34,8 @@ def sort_series_ids_sets(path_src):
 # =============================================================================
 
 # =============================================================================
-# Test Series IDS
+# Test Series IDS Consistency
 # =============================================================================
-
-    def get_columns_set(file_name: str, path_src: str) -> set[str]:
-        kwargs = {
-            'filepath_or_buffer': Path(path_src).joinpath(file_name),
-            'index_col': 0
-        }
-        return set(pd.read_csv(**kwargs).columns)
 
     FILE_NAME = 'stat_can_cap.csv'
     SERIES_IDS_CAP = get_columns_set(FILE_NAME, path_src)

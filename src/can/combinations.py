@@ -15,6 +15,7 @@ from sklearn.metrics import r2_score
 
 from thesis.src.lib.read import read_temporary
 
+PATH_EXPORT = '/home/green-machine/Downloads'
 # =============================================================================
 # TODO: What?
 # =============================================================================
@@ -45,4 +46,4 @@ for pair in combinations(data.columns, 2):
             ignore_index=True
         )
 FILE_NAME = 'df.csv'
-df.to_csv(Path(DIR_EXPORT).joinpath(FILE_NAME), index=False)
+df.to_csv(Path(PATH_EXPORT).joinpath(FILE_NAME), index=False)

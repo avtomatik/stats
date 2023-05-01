@@ -9,15 +9,15 @@ from pandas import DataFrame
 
 
 def read(file_name: str, path_src: str) -> DataFrame:
-    MAP = {
+    MAP_ARCHIVE_ID_FIELD = {
         'source_id': 0, 'series_id': 14, 'period': 15, 'subperiod': 16, 'value': 17
     }
     kwargs = {
         'filepath_or_buffer': Path(path_src).joinpath(file_name),
         'header': 0,
-        'names': tuple(MAP.keys()),
+        'names': tuple(MAP_ARCHIVE_ID_FIELD.keys()),
         'index_col': 2,
-        'usecols': tuple(MAP.values()),
+        'usecols': tuple(MAP_ARCHIVE_ID_FIELD.values()),
     }
     return pd.read_csv(**kwargs)
 

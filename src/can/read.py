@@ -14,6 +14,8 @@ from zipfile import ZipFile
 import pandas as pd
 from pandas import DataFrame
 
+from .constants import MAP_READ_CAN
+
 
 @cache
 def read_can(archive_id: int) -> DataFrame:
@@ -34,70 +36,13 @@ def read_can(archive_id: int) -> DataFrame:
         ================== =================================
     """
     MAP_DEFAULT = {'period': 0, 'series_id': 10, 'value': 12}
-    MAP = {
-        310004: {
-            'period': 0,
-            'prices': 2,
-            'category': 4,
-            'component': 5,
-            'series_id': 6,
-            'value': 8
-        },
-        2820011: {
-            'period': 0,
-            'geo': 1,
-            'classofworker': 2,
-            'industry': 3,
-            'sex': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        2820012: {'period': 0, 'series_id': 5, 'value': 7},
-        3790031: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'prices': 3,
-            'naics': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        3800084: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'est': 3,
-            'series_id': 4,
-            'value': 6
-        },
-        3800102: {'period': 0, 'series_id': 4, 'value': 6},
-        3800106: {'period': 0, 'series_id': 3, 'value': 5},
-        3800518: {'period': 0, 'series_id': 4, 'value': 6},
-        3800566: {'period': 0, 'series_id': 3, 'value': 5},
-        3800567: {'period': 0, 'series_id': 4, 'value': 6},
-        36100096: {
-            'period': 0,
-            'geo': 1,
-            'prices': 3,
-            'industry': 4,
-            'category': 5,
-            'component': 6,
-            'series_id': 11,
-            'value': 13
-        },
-        36100303: {'period': 0, 'series_id': 9, 'value': 11},
-        36100305: {'period': 0, 'series_id': 9, 'value': 11},
-        16100053: {'period': 0, 'series_id': 9, 'value': 11},
-        36100207: {'period': 0, 'series_id': 9, 'value': 11},
-        14100235: {'period': 0, 'series_id': 8, 'value': 10}
-    }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
     TO_PARSE_DATES = (2820011, 3790031, 3800084, 36100108, 36100207, 36100434, 14100235, 14100355)
     kwargs = {
         'header': 0,
-        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
+        'names': list(MAP_READ_CAN.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
-        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
+        'usecols': list(MAP_READ_CAN.get(archive_id, MAP_DEFAULT).values()),
         'parse_dates': archive_id in TO_PARSE_DATES
     }
     if archive_id < 10 ** 7:
@@ -189,7 +134,7 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
         ================== =================================
     """
     MAP_DEFAULT = {'period': 0, 'series_id': 10, 'value': 12}
-    MAP = {
+    MAP_ARCHIVE_ID_FIELD = {
         310004: {
             'period': 0,
             'prices': 2,
@@ -250,9 +195,9 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
     TO_PARSE_DATES = (2820011, 3790031, 3800084, 36100108, 36100434)
     kwargs = {
         'header': 0,
-        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
+        'names': list(MAP_ARCHIVE_ID_FIELD.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
-        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
+        'usecols': list(MAP_ARCHIVE_ID_FIELD.get(archive_id, MAP_DEFAULT).values()),
         'parse_dates': archive_id in TO_PARSE_DATES
     }
     if archive_id < 10 ** 7:

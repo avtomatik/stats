@@ -16,13 +16,12 @@ import pandas as pd
 import requests
 from pandas import DataFrame
 
-from stats.src.can.constants import (SERIES_IDS_INDEXES, SERIES_IDS_PERSONS,
-                                     SERIES_IDS_THOUSANDS)
-from stats.src.can.get_mean_for_min_std import get_mean_for_min_std
-from stats.src.can.stockpile import stockpile_can
-from stats.src.common.transform import transform_year_mean
-from stats.src.common.utils import dichotomize_series_ids
-from thesis.src.lib.transform import transform_sum
+from ..common.transform import transform_year_mean
+from ..common.utils import dichotomize_series_ids
+from .combine import combine_can_plain_or_sum
+from .constants import (MAP_READ_CAN_SPC, SERIES_IDS_INDEXES,
+                        SERIES_IDS_PERSONS, SERIES_IDS_THOUSANDS)
+from .get_mean_for_min_std import get_mean_for_min_std
 
 
 @cache
@@ -46,167 +45,13 @@ def read_can(archive_id: int) -> DataFrame:
     MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
     TO_PARSE_DATES = (2820011, 3790031, 3800084, 14100221,
                       14100235, 14100238, 14100355, 36100108, 36100207, 36100434)
-    MAP = {
-        310004: {
-            'period': 0,
-            'prices': 2,
-            'category': 4,
-            'component': 5,
-            'series_id': 6,
-            'value': 8
-        },
-        2820011: {
-            'period': 0,
-            'geo': 1,
-            'classofworker': 2,
-            'industry': 3,
-            'sex': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        2820012: {'period': 0, 'series_id': 5, 'value': 7},
-        3790031: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'prices': 3,
-            'naics': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        3800084: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'est': 3,
-            'series_id': 4,
-            'value': 6
-        },
-        3800102: {'period': 0, 'series_id': 4, 'value': 6},
-        3800106: {'period': 0, 'series_id': 3, 'value': 5},
-        3800518: {'period': 0, 'series_id': 4, 'value': 6},
-        3800566: {'period': 0, 'series_id': 3, 'value': 5},
-        3800567: {'period': 0, 'series_id': 4, 'value': 6},
-        14100027: {'period': 0, 'series_id': 10, 'value': 12},
-        36100096: {
-            'period': 0,
-            'geo': 1,
-            'prices': 3,
-            'industry': 4,
-            'category': 5,
-            'component': 6,
-            'series_id': 11,
-            'value': 13
-        },
-        36100434: {'period': 0, 'series_id': 10, 'value': 12}
-    }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
 
     kwargs = {
         'header': 0,
-        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
+        'names': list(MAP_READ_CAN_SPC.get(archive_id, MAP_DEFAULT).keys()),
         'index_col': 0,
-        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
-        'parse_dates': archive_id in TO_PARSE_DATES
-    }
-    MAP = {
-        14100027: {
-            'period': 0,  # int64
-            'series_id': 10,  # object
-            'value': 12,  # float64
-        },
-        14100221: {
-            'period': 0,  # object
-            'series_id': 10,  # object
-            'value': 12,  # float64
-        },
-        14100235: {
-            'period': 0,  # object
-            'series_id': 8,  # object
-            'value': 10,  # float64
-        },
-        14100238: {
-            'period': 0,  # object
-            'series_id': 8,  # object
-            'value': 10,  # float64
-        },
-        14100243: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        14100265: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        14100355: {
-            'period': 0,  # object
-            'series_id': 10,  # object
-            'value': 12,  # float64
-        },
-        14100392: {
-            'period': 0,  # int64
-            'series_id': 8,  # object
-            'value': 10,  # float64
-        },
-        16100053: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        16100054: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100207: {
-            'period': 0,  # object
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100208: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100303: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100305: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100309: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100310: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100480: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-        36100489: {
-            'period': 0,  # int64
-            'series_id': 9,  # object
-            'value': 11,  # float64
-        },
-    }
-
-    kwargs = {
-        'header': 0,
-        'names': list(MAP.get(archive_id, MAP_DEFAULT).keys()),
-        'index_col': 0,
-        'usecols': list(MAP.get(archive_id, MAP_DEFAULT).values()),
+        'usecols': list(MAP_READ_CAN_SPC.get(archive_id, MAP_DEFAULT).values()),
         'parse_dates': archive_id in TO_PARSE_DATES
     }
 
@@ -224,24 +69,14 @@ def read_can(archive_id: int) -> DataFrame:
     return pd.read_csv(**kwargs)
 
 
-def subroutine(series_ids: dict[str, int]) -> DataFrame:
-    if len(series_ids) > 1:
-        return stockpile_can(series_ids).pipe(
-            transform_sum,
-            name='_'.join((*series_ids, 'sum'))
-        )
-    else:
-        return stockpile_can(series_ids)
-
-
 def combine_can_special(
     series_ids_plain: dict[str, int],
     series_ids_mean: dict[str, int]
 ) -> DataFrame:
     if series_ids_plain:
-        return subroutine(series_ids_plain)
+        return combine_can_plain_or_sum(series_ids_plain)
     if series_ids_mean:
-        return subroutine(series_ids_mean).pipe(transform_year_mean)
+        return combine_can_plain_or_sum(series_ids_mean).pipe(transform_year_mean)
 
 
 def get_data_frame_index(series_ids: tuple[dict[str, int]]) -> DataFrame:
@@ -334,8 +169,9 @@ def main(path_export, SERIES_IDS_INDEXES, SERIES_IDS_THOUSANDS, SERIES_IDS_PERSO
     df['workers'] = df_index.div(df_index.loc[year, :]).mul(value)
     df = df.iloc[:, [-1]].round(1)
 
+    file_name = 'can_labour.pdf'
     df.plot(grid=True).get_figure().savefig(
-        Path(path_export).joinpath('view_canada.pdf'),
+        Path(path_export).joinpath(file_name),
         format='pdf',
         dpi=900
     )
