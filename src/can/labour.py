@@ -63,8 +63,8 @@ def read_can(archive_id: int) -> DataFrame:
                 f'{archive_id:08n}-eng.zip'
             ).open(f'{archive_id:08n}.csv')
         else:
-            kwargs['filepath_or_buffer'] = ZipFile(io.BytesIO(
-                requests.get(url).content)
+            kwargs['filepath_or_buffer'] = ZipFile(
+                io.BytesIO(requests.get(url).content)
             ).open(f'{archive_id:08n}.csv')
     return pd.read_csv(**kwargs)
 
