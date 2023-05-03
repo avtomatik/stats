@@ -609,11 +609,12 @@ MAP_READ_CAN = {
 }
 
 
-# =============================================================================
-# TODO: Extend
-# =============================================================================
 MAP_READ_CAN_SPC = {
-    10100094: {},
+    10100094: {
+        'period': 0,  # object
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
     14100027: {
         'period': 0,  # int64
         'series_id': 10,  # object
@@ -664,8 +665,16 @@ MAP_READ_CAN_SPC = {
         'series_id': 9,  # object
         'value': 11,  # float64
     },
-    16100109: {},
-    16100111: {},
+    16100109: {
+        'period': 0,  # object
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
+    16100111: {
+        'period': 0,  # object
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
     36100207: {
         'period': 0,  # object
         'series_id': 9,  # object
@@ -676,8 +685,16 @@ MAP_READ_CAN_SPC = {
         'series_id': 9,  # object
         'value': 11,  # float64
     },
-    36100210: {},
-    36100217: {},
+    36100210: {
+        'period': 0,  # int64
+        'series_id': 10,  # object
+        'value': 12,  # float64
+    },
+    36100217: {
+        'period': 0,  # int64
+        'series_id': 9,  # object
+        'value': 11,  # float64
+    },
     36100303: {
         'period': 0,  # int64
         'series_id': 9,  # object
@@ -698,13 +715,21 @@ MAP_READ_CAN_SPC = {
         'series_id': 9,  # object
         'value': 11,  # float64
     },
-    36100386: {},
+    36100386: {
+        'period': 0,  # int64
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
     36100480: {
         'period': 0,  # int64
         'series_id': 9,  # object
         'value': 11,  # float64
     },
-    36100488: {},
+    36100488: {
+        'period': 0,  # int64
+        'series_id': 8,  # object
+        'value': 10,  # float64
+    },
     36100489: {
         'period': 0,  # int64
         'series_id': 9,  # object
