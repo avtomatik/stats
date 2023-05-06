@@ -7,6 +7,7 @@ Created on Tue Nov  2 21:10:29 2021
 
 
 import io
+import os
 from functools import cache
 from pathlib import Path
 from zipfile import ZipFile
@@ -14,6 +15,10 @@ from zipfile import ZipFile
 import pandas as pd
 import requests
 from pandas import DataFrame
+
+# =============================================================================
+# from stats.src.can.constants import BLUEPRINT_CAPITAL
+# =============================================================================
 
 # =============================================================================
 # TODO: Clear It Up
@@ -166,7 +171,9 @@ def read_can(archive_id: int) -> DataFrame:
         ================== =================================
     """
     MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
-    TO_PARSE_DATES = (2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434)
+    TO_PARSE_DATES = (
+        2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
+    )
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
 
     kwargs = {
@@ -248,51 +255,146 @@ def transform_year_mean(df: DataFrame) -> DataFrame:
     return df.groupby(df.index.year).mean()
 
 
-def read_temporary(
-    file_name: str, path_src: str = '/home/green-machine/data_science/data/interim'
-) -> DataFrame:
+def transform_sum(df: DataFrame, name: str) -> DataFrame:
     """
 
 
     Parameters
     ----------
-    file_name : str
-        DESCRIPTION.
-    path_src : str, optional
-        DESCRIPTION. The default is '/home/green-machine/data_science/data/interim'.
+    df : DataFrame
+        ================== =================================
+        df.index           Period
+        df.iloc[:, ...]    Series
+        ================== =================================
+    name : str
+        New Column Name.
 
     Returns
     -------
     DataFrame
-        DESCRIPTION.
-
+        ================== =================================
+        df.index           Period
+        df.iloc[:, 0]      Sum of <series_ids>
+        ================== =================================
     """
-    kwargs = {
-        'filepath_or_buffer': Path(path_src).joinpath(file_name),
-        'index_col': 0,
-    }
-    return pd.read_csv(**kwargs)
+    df[name] = df.sum(axis=1)
+    return df.iloc[:, [-1]]
 
 
-PATH_EXPORT = '/home/green-machine/Downloads'
+def combine_can_plain_or_sum(series_ids: dict[str, int]) -> DataFrame:
+    if len(series_ids) > 1:
+        return stockpile_can(series_ids).pipe(
+            transform_sum,
+            name='_'.join((*series_ids, 'sum'))
+        )
+    return stockpile_can(series_ids)
+
+
+def combine_can_special(
+    series_ids_plain: dict[str, int],
+    series_ids_mean: dict[str, int]
+) -> DataFrame:
+    if series_ids_plain:
+        return combine_can_plain_or_sum(series_ids_plain)
+    if series_ids_mean:
+        return combine_can_plain_or_sum(series_ids_mean).pipe(transform_year_mean)
+
+
+def dichotomize_series_ids(
+    series_ids: dict[str, int],
+    source_ids: tuple[int]
+) -> tuple[dict[str, int]]:
+    """
+    Parameters
+    ----------
+    series_ids : dict[str, int]
+        DESCRIPTION.
+    source_ids : tuple[int]
+        DESCRIPTION.
+    Returns
+    -------
+    tuple[dict[str, int]]
+        DESCRIPTION.
+    """
+    return (
+        {
+            key: value for key, value in series_ids.items() if not value in source_ids
+        },
+        {
+            key: value for key, value in series_ids.items() if value in source_ids
+        }
+    )
+
+
+TO_PARSE_DATES = (
+    2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
+)
+
+PATH_SOURCE = '../../../data/external'
+
+
+os.chdir(PATH_SOURCE)
 
 # =============================================================================
 # Product
 # =============================================================================
 
-SERIES_IDS = {
-    'v21573668': 36100207,  # Not Useful: Real Gross Domestic Product
-    'v142817': 16100111,  # Not Useful: Capacity Utilization
-    'v37482': 10100094,  # Not Useful: Capacity Utilization
-    'v4331088': 16100109,  # Not Useful: Capacity Utilization
-    'v41713056': 36100208,  # Not Useful: Capital Input
-    'v41713073': 36100208,  # Not Useful: Capital Input
-    'v41707775': 36100309,  # Not Useful: Capital Input
-    'v42189387': 36100310,  # Not Useful: Capital Input
-}
+SERIES_IDS = (
+    {'v37482': 10100094},  # Not Useful: Capacity Utilization
+    {'v4331088': 16100109},  # Not Useful: Capacity Utilization
+    {'v142817': 16100111},  # Not Useful: Capacity Utilization
+)
 
-df = DataFrame()
-combined = DataFrame()
+df = pd.concat(
+    map(
+        lambda _: combine_can_special(
+            *dichotomize_series_ids(_, TO_PARSE_DATES)
+        ),
+        SERIES_IDS
+    ),
+    axis=1,
+    sort=True
+)
+
+df.plot(grid=True)
+
+SERIES_IDS = (
+    {'v21573668': 36100207},  # Not Useful: Real Gross Domestic Product
+)
+
+df = pd.concat(
+    map(
+        lambda _: combine_can_special(
+            *dichotomize_series_ids(_, TO_PARSE_DATES)
+        ),
+        SERIES_IDS
+    ),
+    axis=1,
+    sort=True
+)
+
+df.plot(grid=True)
+
+SERIES_IDS = (
+    {'v41713056': 36100208},  # Not Useful: Capital Input
+    {'v41713073': 36100208},  # Not Useful: Capital Stock
+    {'v41707775': 36100309},  # Not Useful: Capital Input
+    {'v42189387': 36100310},  # Not Useful: Capital Input
+)
+
+df = pd.concat(
+    map(
+        lambda _: combine_can_special(
+            *dichotomize_series_ids(_, TO_PARSE_DATES)
+        ),
+        SERIES_IDS
+    ),
+    axis=1,
+    sort=True
+)
+
+df.plot(grid=True)
+
 # =============================================================================
 # Capital cost
 # =============================================================================
@@ -302,26 +404,21 @@ SERIES_IDS = {
     'v42189907': 36100310,
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-combined = combined.div(combined.loc[1997]).mul(100)
-combined['mean_comb'] = combined.mean(axis=1)
-combined = combined.iloc[:, [-1]]
-df = pd.concat([df, combined], axis=1)
+df = stockpile_can(SERIES_IDS)
+df['mean'] = df.mean(axis=1)
+df.plot(grid=True)
+df = df.iloc[:, [-1]]
 
-file_name = 'df.csv'
+FILE_NAME = 'df.csv'
 # =============================================================================
-# combined.to_csv(Path(PATH_EXPORT).joinpath(file_name))
+# combined.to_csv(Path(PATH_EXPORT).joinpath(FILE_NAME))
 # =============================================================================
 
-FILE_NAME = 'stat_can_cap.csv'
-data = read_temporary(FILE_NAME)
-data = data.div(data.loc[1997]).mul(100)
-combined = pd.concat([data, combined], axis=1)
+data = stockpile_can(BLUEPRINT_CAPITAL)
+df = pd.concat([data, df], axis=1)
 
-data = combined
+data = df
 
-
-combined = DataFrame()
 
 SERIES_IDS = {
     # =========================================================================
@@ -333,8 +430,7 @@ SERIES_IDS = {
     'v11567': 36100386
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-combined = combined.div(combined.loc[1961]).mul(100)
+df = stockpile_can(SERIES_IDS)
 
 SERIES_IDS = {
     # =========================================================================
@@ -346,33 +442,25 @@ SERIES_IDS = {
     'v64602050': 36100488
 }
 
-combined = stockpile_can(SERIES_IDS).pipe(transform_year_mean)
-combined = combined.div(combined.loc[1997]).mul(100)
+df = stockpile_can(SERIES_IDS)
 
-file_name = 'df.csv'
+FILE_NAME = 'df.csv'
 # =============================================================================
-# combined.to_csv(Path(PATH_EXPORT).joinpath(file_name))
+# combined.to_csv(Path(PATH_EXPORT).joinpath(FILE_NAME))
 # =============================================================================
 
 
-FILE_NAME = 'stat_can_cap.csv'
-combined = read_temporary(FILE_NAME).iloc[:, range(30, 35)].dropna(axis=0)
-combined = combined.div(combined.loc[1997]).mul(100)
-combined['mean'] = combined.sum(axis=1)
-combined = combined.iloc[:, [-1]]
-df = pd.concat([df, combined], axis=1)
+SERIES_IDS = {
+    'v46445661': 36100210,
+    'v46445722': 36100210,
+    'v46445783': 36100210,
+    'v46445844': 36100210,
+    'v46445905': 36100210
+}
+df = stockpile_can(SERIES_IDS)
+df['mean'] = df.sum(axis=1)
+df = df.iloc[:, [-1]]
 
-FILE_NAME = 'stat_can_cap_matching.csv'
-data = read_temporary(FILE_NAME)
-data = data[data.iloc[:, 5] !=
-            'Information and communication technologies machinery and equipment']
-data = data[data.iloc[:, 5] != 'Land']
-data = data[data.iloc[:, 6] != 'Intellectual property products']
-# =============================================================================
-# data.dropna(axis=0, how='all').to_csv(
-#     Path(PATH_EXPORT).joinpath(FILE_NAME), index=True
-# )
-# =============================================================================
 
 SERIES_IDS = {
     'v46444624': 36100210,

@@ -21,6 +21,7 @@ def main(
     path_src: str = '../data/external',
     file_name: str = 'stat_can_desc.csv'
 ):
+    FILE_NAMES = ('stat_can_cap.csv', 'stat_can_lab.csv', 'stat_can_prd.csv')
     # =========================================================================
     # Construct CSV File from Specification
     # =========================================================================

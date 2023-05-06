@@ -27,5 +27,4 @@ def combine_can_plain_or_sum(series_ids: dict[str, int]) -> DataFrame:
             transform_sum,
             name='_'.join((*series_ids, 'sum'))
         )
-    else:
-        return stockpile_can(series_ids)
+    return stockpile_can(series_ids)

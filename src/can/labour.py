@@ -43,7 +43,9 @@ def read_can(archive_id: int) -> DataFrame:
         ================== =================================
     """
     MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
-    TO_PARSE_DATES = (2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434)
+    TO_PARSE_DATES = (
+        2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
+    )
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
 
     kwargs = {
@@ -136,7 +138,9 @@ def get_data_frame_value(
 PATH_SOURCE = '../../../data/external'
 PATH_EXPORT = '/home/green-machine/Downloads'
 
-TO_PARSE_DATES = (2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434)
+TO_PARSE_DATES = (
+    2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
+)
 
 # =============================================================================
 # Labor
@@ -167,9 +171,9 @@ def main(path_export, SERIES_IDS_INDEXES, SERIES_IDS_THOUSANDS, SERIES_IDS_PERSO
     df['workers'] = df_index.div(df_index.loc[year, :]).mul(value)
     df = df.iloc[:, [-1]].round(1)
 
-    file_name = 'can_labour.pdf'
+    FILE_NAME = 'can_labour.pdf'
     df.plot(grid=True).get_figure().savefig(
-        Path(path_export).joinpath(file_name),
+        Path(path_export).joinpath(FILE_NAME),
         format='pdf',
         dpi=900
     )

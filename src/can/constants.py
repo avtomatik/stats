@@ -182,7 +182,7 @@ BLUEPRINT_PRODUCT = {
     # =========================================================================
     # Not Useful: Capacity Utilization :: Capacity utilization rates (Bank of Canada calculated series), seasonally adjusted
     # =========================================================================
-    'v37482': 10100094,
+    'v37482': 10100094,  # Not Useful: Capacity Utilization
     'v535579': 16100053,
     'v535593': 16100053,
     'v535663': 16100053,
@@ -192,18 +192,18 @@ BLUEPRINT_PRODUCT = {
     # =========================================================================
     # Not Useful: Capacity Utilization :: Industrial capacity utilization rates, by industry
     # =========================================================================
-    'v4331088': 16100109,
+    'v4331088': 16100109,  # Not Useful: Capacity Utilization
     # =========================================================================
     # Not Useful: Capacity Utilization :: Industrial capacity utilization rates, by Standard Industrial Classification, 1980 (SIC)
     # =========================================================================
-    'v142817': 16100111,
+    'v142817': 16100111,  # Not Useful: Capacity Utilization
     'v21573668': 36100207,  # Not Useful: Real Gross Domestic Product
     'v21573686': 36100207,
     # =========================================================================
     # '!v41712954': 36100208,
     # =========================================================================
     'v41713056': 36100208,  # Not Useful: Capital Input
-    'v41713073': 36100208,  # Not Useful: Capital Input Capital stock;
+    'v41713073': 36100208,  # Not Useful: Capital Stock
     'v41713243': 36100208,
     'v86718697': 36100217,  # Manufacturing Indexes
     'v86719219': 36100217,  # Gross Output
@@ -233,7 +233,7 @@ BLUEPRINT_PRODUCT = {
     # =========================================================================
     # Gross Output :: Output, by sector and industry, provincial and territorial;
     # =========================================================================
-    'v64602050': 36100488
+    'v64602050': 36100488,  # Gross Output
 }
 
 
