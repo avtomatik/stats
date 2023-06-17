@@ -10,7 +10,7 @@ from pandas import DataFrame
 
 from stats.src.can.pull import pull_by_series_id
 
-DIR = "/media/green-machine/KINGSTON"
+PATH_SRC = "/media/green-machine/KINGSTON"
 
 
 def pull_imf_can_gdp_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
@@ -33,7 +33,7 @@ def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
     FILE_NAME = "dataset_world_imf-WEOApr2018all.xls"
     SERIES_IDS = ['NGDP_R', 'NGDP', 'NGDPD', 'NGDP_D']
     kwargs = {
-        "filepath_or_buffer": Path(DIR).joinpath(FILE_NAME),
+        "filepath_or_buffer": Path(PATH_SRC).joinpath(FILE_NAME),
         "low_memory": False
     }
     kwargs = {
@@ -67,7 +67,7 @@ def read() -> DataFrame:
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )
     kwargs = {
-        'filepath_or_buffer': Path(DIR).joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
+        'filepath_or_buffer': Path(PATH_SRC).joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
         'header': 0,
         'names': tuple(MAP_ARCHIVE_ID_FIELD.keys()),
         'index_col': 0,

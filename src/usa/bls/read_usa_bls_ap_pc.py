@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DIR = '../macroeconomics'
+PATH_SRC = '../macroeconomics'
 kwargs = {
     'sep': '\t',
     'index_col': range(4),
@@ -19,5 +19,5 @@ kwargs = {
 FILE_NAME = 'usa_science_data.zip/ap.df.0.Current'
 FILE_NAME = 'usa_science_data.zip/pc.df.0.Current'
 
-kwargs['filepath_or_buffer'] = Path(DIR).joinpath(FILE_NAME)
+kwargs['filepath_or_buffer'] = Path(PATH_SRC).joinpath(FILE_NAME)
 df = pd.read_csv(**kwargs)

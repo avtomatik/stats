@@ -85,12 +85,12 @@ def get_data_frame_index(series_ids: tuple[dict[str, int]]) -> DataFrame:
         map(
             lambda _: combine_can_special(
                 *dichotomize_series_ids(_, TO_PARSE_DATES)
-            ).pct_change(),
+            ),
             series_ids
         ),
         axis=1,
         sort=True
-    )
+    ).pct_change()
     df['mean'] = df.mean(axis=1)
     # =========================================================================
     # Composite Index
@@ -166,17 +166,17 @@ def main(path_export, SERIES_IDS_INDEXES, SERIES_IDS_THOUSANDS, SERIES_IDS_PERSO
 
     df = DataFrame()
 
-    year, value = get_mean_for_min_std(SERIES_IDS_THOUSANDS)
+    year, value = get_mean_for_min_std(SERIES_IDS_THOUSANDS, TO_PARSE_DATES)
 
-    df['workers'] = df_index.div(df_index.loc[year, :]).mul(value)
-    df = df.iloc[:, [-1]].round(1)
+    df['workers'] = df_index.div(df_index.loc[year, :]).mul(value).round(1)
 
     FILE_NAME = 'can_labour.pdf'
-    df.plot(grid=True).get_figure().savefig(
-        Path(path_export).joinpath(FILE_NAME),
-        format='pdf',
-        dpi=900
-    )
+    kwargs = {
+        'fname': Path(path_export).joinpath(FILE_NAME),
+        'format': 'pdf',
+        'dpi': 900
+    }
+    df.plot(grid=True).get_figure().savefig(**kwargs)
 
 
 if __name__ == '__main__':

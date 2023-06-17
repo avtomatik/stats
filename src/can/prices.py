@@ -20,5 +20,5 @@ df = pd.concat(
 df['mean'] = df.mean(axis=1)
 df['cum_mean'] = df.iloc[:, -1].add(1).cumprod()
 df = df.div(df.loc[2012])
-FILE_NAME = 'basis_frame.xlsx'
-df.to_excel(FILE_NAME)
+FILE_NAME = 'data_composed.csv'
+df.to_csv(FILE_NAME)

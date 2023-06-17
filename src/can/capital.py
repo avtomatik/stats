@@ -16,6 +16,8 @@ import pandas as pd
 import requests
 from pandas import DataFrame
 
+from stats.src.can.constants import BLUEPRINT_CAPITAL
+
 # =============================================================================
 # from stats.src.can.constants import BLUEPRINT_CAPITAL
 # =============================================================================
@@ -226,7 +228,7 @@ def pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
     )
 
 
-def stockpile_can(series_ids: dict[str, int]) -> pd.DataFrame:
+def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
     """
     Parameters
     ----------
@@ -243,7 +245,7 @@ def stockpile_can(series_ids: dict[str, int]) -> pd.DataFrame:
     """
     return pd.concat(
         map(
-            lambda _: read_can(_[1]).pipe(pull_by_series_id, _[0]),
+            lambda _: read_can(_[-1]).pipe(pull_by_series_id, _[0]),
             series_ids.items()
         ),
         axis=1,
@@ -409,15 +411,15 @@ df['mean'] = df.mean(axis=1)
 df.plot(grid=True)
 df = df.iloc[:, [-1]]
 
-FILE_NAME = 'df.csv'
 # =============================================================================
-# combined.to_csv(Path(PATH_EXPORT).joinpath(FILE_NAME))
+# FILE_NAME = 'data_composed.csv'
+# kwargs = {
+#     'path_or_buf': Path(PATH_EXPORT).joinpath(FILE_NAME)
+# }
+# df.to_csv(**kwargs)
 # =============================================================================
 
-data = stockpile_can(BLUEPRINT_CAPITAL)
-df = pd.concat([data, df], axis=1)
-
-data = df
+df = pd.concat([stockpile_can(BLUEPRINT_CAPITAL), df], axis=1)
 
 
 SERIES_IDS = {
@@ -444,9 +446,12 @@ SERIES_IDS = {
 
 df = stockpile_can(SERIES_IDS)
 
-FILE_NAME = 'df.csv'
 # =============================================================================
-# combined.to_csv(Path(PATH_EXPORT).joinpath(FILE_NAME))
+# FILE_NAME = 'data_composed.csv'
+# kwargs = {
+#     'path_or_buf': Path(PATH_EXPORT).joinpath(FILE_NAME)
+# }
+# df.to_csv(**kwargs)
 # =============================================================================
 
 

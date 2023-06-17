@@ -1,9 +1,20 @@
+import matplotlib.pyplot as plt
 import pandas as pd
+from pandas import DataFrame
 
-from thesis.src.lib.plot import plot_can_test
 from thesis.src.lib.pull import pull_by_series_id
 from thesis.src.lib.read import read_can
 from thesis.src.lib.transform import transform_year_sum
+
+
+def plot_can_test(df: DataFrame) -> None:
+    plt.figure()
+    df.plot(logy=True)
+    plt.title('Discrepancy')
+    plt.xlabel('Period')
+    plt.ylabel('Index')
+    plt.grid()
+    plt.show()
 
 
 def test_data_can():
@@ -84,3 +95,4 @@ def test_data_can():
     # Option 4: What?
     # =========================================================================
     # plot_can_test(df.iloc[:, -1].div(df.iloc[:, -1]), df.iloc[:, -3])
+

@@ -81,7 +81,7 @@ def main(
                         )
                     ]
                 )
-    df.to_excel(Path(path_export).joinpath(file_name), index=False)
+    df.to_csv(Path(path_export).joinpath(file_name), index=False)
 
 
 if __name__ == '__main__':

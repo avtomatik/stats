@@ -13,14 +13,15 @@ import requests
 from lxml import etree
 from pandas import DataFrame
 
-URL = "https://www.federalreserve.gov/datadownload/Output.aspx?rel=g17&filetype=zip"
+URL = 'https://www.federalreserve.gov/datadownload/Output.aspx?rel=g17&filetype.zip'
 
 with ZipFile(io.BytesIO(requests.get(URL).content)) as archive:
     # =========================================================================
-    # Select the Largest File Containing the Most of the Data
+    # Select the Largest File with min() Function
     # =========================================================================
-    MAP_FILES = {_.file_size: _.filename for _ in archive.filelist}
-    with archive.open(MAP_FILES[max(MAP_FILES)]) as f:
+    with archive.open(
+        min({_.filename: _.file_size for _ in archive.filelist})
+    ) as f:
         tree = etree.parse(f)
         doc = tree.getroot()
 

@@ -1,5 +1,11 @@
 SERIES_IDS_CD = {
+    # =========================================================================
+    # Annual Increase in Terms of Cost Price (1)
+    # =========================================================================
     'CDT2S1': 'dataset_usa_cobb-douglas.zip',
+    # =========================================================================
+    # Annual Increase in Terms of 1880 dollars (3)
+    # =========================================================================
     'CDT2S3': 'dataset_usa_cobb-douglas.zip'
 }
 
@@ -180,7 +186,7 @@ BLUEPRINT_LABOUR = {
 # =============================================================================
 BLUEPRINT_PRODUCT = {
     # =========================================================================
-    # Not Useful: Capacity Utilization :: Capacity utilization rates (Bank of Canada calculated series), seasonally adjusted
+    # Not Useful: Capacity Utilization :: 10100094 :: Capacity utilization rates (Bank of Canada calculated series), seasonally adjusted
     # =========================================================================
     'v37482': 10100094,  # Not Useful: Capacity Utilization
     'v535579': 16100053,
@@ -190,11 +196,11 @@ BLUEPRINT_PRODUCT = {
     'v761808': 16100054,
     'v761927': 16100054,
     # =========================================================================
-    # Not Useful: Capacity Utilization :: Industrial capacity utilization rates, by industry
+    # Not Useful: Capacity Utilization :: 16100109 :: Industrial capacity utilization rates, by industry
     # =========================================================================
     'v4331088': 16100109,  # Not Useful: Capacity Utilization
     # =========================================================================
-    # Not Useful: Capacity Utilization :: Industrial capacity utilization rates, by Standard Industrial Classification, 1980 (SIC)
+    # Not Useful: Capacity Utilization :: 16100111 :: Industrial capacity utilization rates, by Standard Industrial Classification, 1980 (SIC)
     # =========================================================================
     'v142817': 16100111,  # Not Useful: Capacity Utilization
     'v21573668': 36100207,  # Not Useful: Real Gross Domestic Product
@@ -418,33 +424,28 @@ DATA_STATCAN_ARCHIVE = (
 # =============================================================================
 # Gross fixed capital formation Data Block
 # =============================================================================
-# =============================================================================
-# Not Clear:
-# =============================================================================
-{
-    "table": 3800068,
-    "title": "Gross fixed capital formation",
-    "geo": "Canada",
-    "prices": "Chained (2007) dollars",
-    "seas": "Seasonally adjusted at annual rates",
-    "estimates": "Industrial machinery and equipment (x 1,000,000)",
-    "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
-    "series_id": "v62143969"
-}
-
-# =============================================================================
-# Not Clear:
-# =============================================================================
-{
-    "table": 3800068,
-    "title": "Gross fixed capital formation",
-    "geo": "Canada",
-    "prices": "Chained (2007) dollars",
-    "seas": "Seasonally adjusted at annual rates",
-    "estimates": "Industrial machinery and equipment (x 1,000,000)",
-    "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
-    "series_id": "v62143990"
-}
+CAN_GROSS_FIXED_CAPITAL_FORMATION = (
+    {
+        "table": 3800068,
+        "title": "Gross fixed capital formation",
+        "geo": "Canada",
+        "prices": "Chained (2007) dollars",
+        "seas": "Seasonally adjusted at annual rates",
+        "estimates": "Industrial machinery and equipment (x 1,000,000)",
+        "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
+        "series_id": "v62143969"
+    },
+    {
+        "table": 3800068,
+        "title": "Gross fixed capital formation",
+        "geo": "Canada",
+        "prices": "Chained (2007) dollars",
+        "seas": "Seasonally adjusted at annual rates",
+        "estimates": "Industrial machinery and equipment (x 1,000,000)",
+        "frequency_start_end": "(quarterly, 1961-03-01 to 2017-09-01)",
+        "series_id": "v62143990"
+    }
+)
 
 
 SERIES_IDS_PRICE_A = (

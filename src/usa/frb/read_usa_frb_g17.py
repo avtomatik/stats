@@ -6,14 +6,14 @@ import pandas as pd
 pd.options.display.max_columns = 8
 
 
-DIR = '../data/external'
+PATH = '../data/external'
 FILE_NAME = 'FRB_g17.zip'
-with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
-    MAP_FILES = {_.file_size: _.filename for _ in archive.filelist}
+with ZipFile(Path(PATH).joinpath(FILE_NAME)) as archive:
+    MAP_FILES = {_.filename: _.file_size for _ in archive.filelist}
     # =====================================================================
-    # Select the Largest File
+    # Select the Largest File with min() Function
     # =====================================================================
-    with archive.open(MAP_FILES[max(MAP_FILES)]) as f:
+    with archive.open(min(MAP_FILES)) as f:
         kwargs = {
             'path_or_buffer': f,
             'xpath': ".//frb:DataSet",
@@ -22,7 +22,6 @@ with ZipFile(Path(DIR).joinpath(FILE_NAME)) as archive:
             }
         }
         df = pd.read_xml(**kwargs)
-        df.to_excel('test.xlsx', index=False)
         kwargs = {
             'path_or_buffer': f,
             'index_col': 0,

@@ -13,19 +13,19 @@ def get_columns_set(file_name: str, path_src: str) -> set[str]:
 
 def sort_series_ids_sets(path_src: str):
     FILE_NAME = 'series_ids.xlsx'
-    data = pd.read_excel(
+    df = pd.read_excel(
         Path(path_src).joinpath(FILE_NAME)
     ).dropna(axis=0, how='all').dropna(axis=1, how='all').fillna('None')
 # =============================================================================
-# data.to_excel(Path(path_export).joinpath(FILE_NAME), index=False)
+# df.to_csv(Path(path_export).joinpath(FILE_NAME), index=False)
 # =============================================================================
 
-    version = sorted(data.iloc[:, 0].unique())[0]
-    chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
+    version = sorted(df.iloc[:, 0].unique())[0]
+    chunk = df[df.iloc[:, 0] == version].iloc[:, 1:]
     chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
     SERIES_IDS_INIT = set(chunk.iloc[:, 0])
-    version = sorted(data.iloc[:, 0].unique())[2]
-    chunk = data[data.iloc[:, 0] == version].iloc[:, 1:]
+    version = sorted(df.iloc[:, 0].unique())[2]
+    chunk = df[df.iloc[:, 0] == version].iloc[:, 1:]
     chunk = chunk[chunk.iloc[:, 0] == "# Labor"].iloc[:, 1:]
     SERIES_IDS_FINAL = set(chunk.iloc[:, 0])
 # =============================================================================
