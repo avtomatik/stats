@@ -16,7 +16,7 @@ import pandas as pd
 import requests
 from pandas import DataFrame
 
-from stats.src.can.constants import BLUEPRINT_CAPITAL
+from stats.src.can.constants import BLUEPRINT_CAPITAL, MAP_READ_CAN_SPC
 
 # =============================================================================
 # from stats.src.can.constants import BLUEPRINT_CAPITAL
@@ -25,133 +25,6 @@ from stats.src.can.constants import BLUEPRINT_CAPITAL
 # =============================================================================
 # TODO: Clear It Up
 # =============================================================================
-MAP_READ_CAN_SPC = {
-    10100094: {
-        'period': 0,  # object
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    14100027: {
-        'period': 0,  # int64
-        'series_id': 10,  # object
-        'value': 12,  # float64
-    },
-    14100221: {
-        'period': 0,  # object
-        'series_id': 10,  # object
-        'value': 12,  # float64
-    },
-    14100235: {
-        'period': 0,  # object
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    14100238: {
-        'period': 0,  # object
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    14100243: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    14100265: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    14100355: {
-        'period': 0,  # object
-        'series_id': 10,  # object
-        'value': 12,  # float64
-    },
-    14100392: {
-        'period': 0,  # int64
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    16100053: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    16100054: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    16100109: {
-        'period': 0,  # object
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    16100111: {
-        'period': 0,  # object
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    36100207: {
-        'period': 0,  # object
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100208: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100210: {
-        'period': 0,  # int64
-        'series_id': 10,  # object
-        'value': 12,  # float64
-    },
-    36100217: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100303: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100305: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100309: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100310: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100386: {
-        'period': 0,  # int64
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    36100480: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-    36100488: {
-        'period': 0,  # int64
-        'series_id': 8,  # object
-        'value': 10,  # float64
-    },
-    36100489: {
-        'period': 0,  # int64
-        'series_id': 9,  # object
-        'value': 11,  # float64
-    },
-}
 
 
 @cache
@@ -172,7 +45,7 @@ def read_can(archive_id: int) -> DataFrame:
         df.iloc[:, -1]     Values
         ================== =================================
     """
-    MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
+    MAP_DEFAULT = dict(zip(['period', 'series_id', 'value'], [0, 9, 11]))
     TO_PARSE_DATES = (
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )

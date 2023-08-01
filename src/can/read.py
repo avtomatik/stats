@@ -35,7 +35,7 @@ def read_can(archive_id: int) -> DataFrame:
         df.iloc[:, -1]     Values
         ================== =================================
     """
-    MAP_DEFAULT = {'period': 0, 'series_id': 10, 'value': 12}
+    MAP_DEFAULT = dict(zip(['period', 'series_id', 'value'], [0, 10, 12]))
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
     TO_PARSE_DATES = (
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
@@ -115,63 +115,39 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
         df.iloc[:, -1]     Values
         ================== =================================
     """
-    MAP_DEFAULT = {'period': 0, 'series_id': 10, 'value': 12}
+    MAP_DEFAULT = dict(zip(['period', 'series_id', 'value'], [0, 10, 12]))
     MAP_ARCHIVE_ID_FIELD = {
-        310004: {
-            'period': 0,
-            'prices': 2,
-            'category': 4,
-            'component': 5,
-            'series_id': 6,
-            'value': 8
-        },
-        2820011: {
-            'period': 0,
-            'geo': 1,
-            'classofworker': 2,
-            'industry': 3,
-            'sex': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        2820012: {'period': 0, 'series_id': 5, 'value': 7},
-        3790031: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'prices': 3,
-            'naics': 4,
-            'series_id': 5,
-            'value': 7
-        },
-        3800084: {
-            'period': 0,
-            'geo': 1,
-            'seas': 2,
-            'est': 3,
-            'series_id': 4,
-            'value': 6
-        },
-        3800102: {'period': 0, 'series_id': 4, 'value': 6},
-        3800106: {'period': 0, 'series_id': 3, 'value': 5},
-        3800518: {'period': 0, 'series_id': 4, 'value': 6},
-        3800566: {'period': 0, 'series_id': 3, 'value': 5},
-        3800567: {'period': 0, 'series_id': 4, 'value': 6},
-        36100096: {
-            'period': 0,
-            # =============================================================================
-            #             'geo': 1,
-            #             'prices': 3,
-            #             'industry': 4,
-            #             'category': 5,
-            #             'component': 6,
-            # =============================================================================
-            'series_id': 11,
-            'value': 13
-        },
-        36100303: {'period': 0, 'series_id': 9, 'value': 11},
-        36100305: {'period': 0, 'series_id': 9, 'value': 11},
-        36100236: {'period': 0, 'series_id': 11, 'value': 13}
+        310004: dict(zip(['period', 'prices', 'category', 'component', 'series_id', 'value'], [0, 2, 4, 5, 6, 8])),
+        2820011: dict(zip(['period', 'geo', 'classofworker', 'industry', 'sex', 'series_id', 'value'], [0, 1, 2, 3, 4, 5, 7])),
+        2820012: dict(zip(['period', 'series_id', 'value'], [0, 5, 7])),
+        3790031: dict(zip(['period', 'geo', 'seas', 'prices', 'naics', 'series_id', 'value'], [0, 1, 2, 3, 4, 5, 7])),
+        3800084: dict(zip(['period', 'geo', 'seas', 'est', 'series_id', 'value'], [0, 1, 2, 3, 4, 6])),
+        3800102: dict(zip(['period', 'series_id', 'value'], [0, 4, 6])),
+        3800106: dict(zip(['period', 'series_id', 'value'], [0, 3, 5])),
+        3800518: dict(zip(['period', 'series_id', 'value'], [0, 4, 6])),
+        3800566: dict(zip(['period', 'series_id', 'value'], [0, 3, 5])),
+        3800567: dict(zip(['period', 'series_id', 'value'], [0, 4, 6])),
+        36100096: dict(
+        zip(
+            [
+                'period',
+# =============================================================================
+#                 'geo', 'prices', 'industry', 'category', 'component',
+# =============================================================================
+                'series_id', 'value'
+            ],
+            [
+                0,
+# =============================================================================
+#                 1, 3, 4, 5, 6,
+# =============================================================================
+                11, 13
+            ]
+        )
+    ),
+        36100303: dict(zip(['period', 'series_id', 'value'], [0, 9, 11])),
+        36100305: dict(zip(['period', 'series_id', 'value'], [0, 9, 11])),
+        36100236: dict(zip(['period', 'series_id', 'value'], [0, 11, 13]))
     }
     url = f'https://www150.statcan.gc.ca/n1/tbl/csv/{archive_id:08n}-eng.zip'
     TO_PARSE_DATES = (

@@ -42,7 +42,7 @@ def read_can(archive_id: int) -> DataFrame:
         df.iloc[:, -1]     Values
         ================== =================================
     """
-    MAP_DEFAULT = {'period': 0, 'series_id': 9, 'value': 11}
+    MAP_DEFAULT = dict(zip(['period', 'series_id', 'value'], [0, 9, 11]))
     TO_PARSE_DATES = (
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )

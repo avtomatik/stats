@@ -9,29 +9,36 @@ from pandas import DataFrame
 
 
 def read(file_name: str, path_src: str) -> DataFrame:
-    MAP_ARCHIVE_ID_FIELD = {
-        'source_id': 0, 'series_id': 14, 'period': 15, 'subperiod': 16, 'value': 17
-    }
-    kwargs = {
-        'filepath_or_buffer': Path(path_src).joinpath(file_name),
+
+    filepath_or_buffer = Path(path_src).joinpath(file_name)
+
+    return pd.read_csv(**get_kwargs(filepath_or_buffer))
+
+
+def get_kwargs(filepath_or_buffer):
+
+    NAMES = ['source_id', 'series_id', 'period', 'subperiod', 'value']
+    USECOLS = [0, 14, 15, 16, 17]
+
+    return {
+        'filepath_or_buffer': filepath_or_buffer,
         'header': 0,
-        'names': tuple(MAP_ARCHIVE_ID_FIELD.keys()),
+        'names': NAMES,
         'index_col': 2,
-        'usecols': tuple(MAP_ARCHIVE_ID_FIELD.values()),
+        'usecols': USECOLS,
     }
-    return pd.read_csv(**kwargs)
 
 
 def read_usa_bea_pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
     """
     Retrieve Yearly Data for BEA Series ID
     """
-    df = df[df.loc[:, "series_id"] == series_id]
-    source_ids = sorted(set(df.loc[:, "source_id"]))
+    df = df[df.loc[:, 'series_id'] == series_id]
+    source_ids = sorted(set(df.loc[:, 'source_id']))
     chunk = pd.concat(
         map(
             lambda _: df[
-                df.loc[:, "source_id"] == _
+                df.loc[:, 'source_id'] == _
             ].iloc[:, [-1]].drop_duplicates(),
             source_ids
         ),

@@ -12,7 +12,7 @@ CRITERIA = (
     'Land'
 )
 df = df[~df.loc[:, 'desc_1'].isin(CRITERIA)]
-CRITERIA = ('Intellectual property products',)
+CRITERIA = ['Intellectual property products']
 df = df[~df.loc[:, 'desc_2'].isin(CRITERIA)]
 
 # =============================================================================

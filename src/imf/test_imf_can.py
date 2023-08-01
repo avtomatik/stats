@@ -54,15 +54,12 @@ def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
 
 def read() -> DataFrame:
     ARCHIVE_ID = 3790031
-    MAP_ARCHIVE_ID_FIELD = {
-        'period': 0,
-        'geo': 1,
-        'seas': 2,
-        'prices': 3,
-        'naics': 4,
-        'series_id': 5,
-        'value': 7
-    }
+    MAP_ARCHIVE_ID_FIELD = dict(
+        zip(
+            ['period', 'geo', 'seas', 'prices', 'naics', 'series_id', 'value'],
+            [0, 1, 2, 3, 4, 5, 7]
+        )
+    )
     TO_PARSE_DATES = (
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )
