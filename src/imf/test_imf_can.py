@@ -54,23 +54,21 @@ def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
 
 def read() -> DataFrame:
     ARCHIVE_ID = 3790031
-    MAP_ARCHIVE_ID_FIELD = dict(
-        zip(
-            ['period', 'geo', 'seas', 'prices', 'naics', 'series_id', 'value'],
-            [0, 1, 2, 3, 4, 5, 7]
-        )
-    )
+    NAMES = ['period', 'geo', 'seas', 'prices', 'naics', 'series_id', 'value']
+    USECOLS = [0, 1, 2, 3, 4, 5, 7]
+
     TO_PARSE_DATES = (
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )
     kwargs = {
         'filepath_or_buffer': Path(PATH_SRC).joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
         'header': 0,
-        'names': tuple(MAP_ARCHIVE_ID_FIELD.keys()),
+        'names': NAMES,
         'index_col': 0,
-        'usecols': tuple(MAP_ARCHIVE_ID_FIELD.values()),
+        'usecols': USECOLS,
         'parse_dates': ARCHIVE_ID in TO_PARSE_DATES
     }
+
     return pd.read_csv(**kwargs)
 
 
