@@ -1,6 +1,6 @@
 import pandas as pd
 
-from stats.src.common.utils import dichotomize_series_ids
+from stats.src.common.funcs import dichotomize_series_ids
 
 
 def get_mean_for_min_std(

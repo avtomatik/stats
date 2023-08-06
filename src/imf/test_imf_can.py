@@ -104,7 +104,7 @@ df['def'] = df.iloc[:, 0].div(df.iloc[:, 1])
 df = df.div(df.loc[2012, :])
 df['real_rebased'] = df.iloc[:, 1].mul(df.iloc[:, -1])
 
-file_name = 'dataset_can_CANSIM.csv'
+file_name = 'dataset_can_cansim.csv'
 df.to_csv(file_name)
 
 df = combine_imf_can_gdp_for_year_base(2015)

@@ -3,7 +3,7 @@ from itertools import combinations
 import pandas as pd
 from pandas import DataFrame
 
-from stats.src.common.utils import archive_name_to_url
+from stats.src.common.funcs import archive_name_to_url
 from thesis.src.lib.read import read_can
 
 

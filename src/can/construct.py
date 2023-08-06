@@ -9,11 +9,10 @@ Created on Sat Sep 18 22:20:54 2021
 from pathlib import Path
 
 import pandas as pd
-
-from stats.src.can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
-                                     BLUEPRINT_PRODUCT)
-from stats.src.can.stockpile import stockpile_can
-from thesis.src.lib.read import read_temporary
+from can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
+                           BLUEPRINT_PRODUCT)
+from can.stockpile import stockpile_can
+from common.funcs import get_pre_kwargs
 
 
 def main(
@@ -31,12 +30,12 @@ def main(
     # Retrieve Series Description
     # =========================================================================
     df = pd.concat(
-        map(lambda _: read_temporary(_), FILE_NAMES),
+        map(lambda _: pd.read_csv(**get_pre_kwargs(_), FILE_NAMES)),
         axis=1
     )
 
     pd.merge(
-        read_temporary(file_name),
+        pd.read_csv(**get_pre_kwargs(file_name)),
         df.transpose(),
         left_index=True,
         right_index=True,

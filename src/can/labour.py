@@ -16,8 +16,8 @@ import pandas as pd
 import requests
 from pandas import DataFrame
 
+from ..common.funcs import dichotomize_series_ids
 from ..common.transform import transform_year_mean
-from ..common.utils import dichotomize_series_ids
 from .combine import combine_can_plain_or_sum
 from .constants import (MAP_READ_CAN_SPC, SERIES_IDS_INDEXES,
                         SERIES_IDS_PERSONS, SERIES_IDS_THOUSANDS)

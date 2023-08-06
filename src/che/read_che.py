@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from stats.src.common.utils import get_file_names, get_xl_sheetnames
+from stats.src.common.funcs import get_file_names, get_xl_sheetnames
 
 
 def main(path_src: str = '/media/green-machine/KINGSTON'):

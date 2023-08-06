@@ -9,16 +9,15 @@ Created on Sat Sep 18 22:20:54 2021
 from itertools import combinations
 from pathlib import Path
 
+import pandas as pd
+from common.funcs import get_pre_kwargs
 from pandas import DataFrame
 from sklearn.metrics import r2_score
-
-from stats.src.can.push import something
-from thesis.src.lib.read import read_temporary
 
 PATH_EXPORT = '/home/green-machine/Downloads'
 
 FILE_NAME = 'stat_can_cap.csv'
-data = read_temporary(FILE_NAME)
+data = pd.read_csv(**get_pre_kwargs(FILE_NAME))
 
 
 df = DataFrame(columns=['series_id_1', 'series_id_2', 'r_2'])

@@ -1,16 +1,17 @@
-from pathlib import Path
 
-from thesis.src.lib.read import read_temporary
+
+import pandas as pd
+from common.funcs import get_pre_kwargs
 
 PATH_EXPORT = '/home/green-machine/Downloads'
 FILE_NAME = 'stat_can_cap_matching.csv'
 
-df = read_temporary(FILE_NAME)
+df = pd.read_csv(**get_pre_kwargs(FILE_NAME))
 
-CRITERIA = (
+CRITERIA = [
     'Information and communication technologies machinery and equipment',
     'Land'
-)
+]
 df = df[~df.loc[:, 'desc_1'].isin(CRITERIA)]
 CRITERIA = ['Intellectual property products']
 df = df[~df.loc[:, 'desc_2'].isin(CRITERIA)]
