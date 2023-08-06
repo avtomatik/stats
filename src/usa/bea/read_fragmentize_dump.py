@@ -8,9 +8,10 @@ Created on Sun Mar 26 12:48:53 2023
 
 from pathlib import Path
 
+import pandas as pd
 from pandas import DataFrame
 
-from stats.src.usa.bea.read import read, read_usa_bea_pull_by_series_id
+from stats.src.usa.bea.read import get_kwargs, read_usa_bea_pull_by_series_id
 
 
 def extract_yearly_data(df: DataFrame, column: str = "subperiod") -> DataFrame:
@@ -34,6 +35,7 @@ def main(
     file_name: str = 'dataset_usa_bea-nipa-2015-05-01.zip',
     path_src: str = '/media/green-machine/KINGSTON'
 ) -> None:
+
     SERIES_IDS = (
         # =====================================================================
         # Not Over There 'K100701'
@@ -45,7 +47,10 @@ def main(
         'A929RC1', 'B057RC0', 'B230RC0', 'B394RC1', 'B645RC1', 'DPCERC1',
         'W055RC1', 'W056RC1'
     )
-    read(file_name, path_src).pipe(extract_yearly_data).pipe(
+
+    pd.read_csv(**get_kwargs(Path(path_src).joinpath(file_name))).pipe(
+        extract_yearly_data
+    ).pipe(
         fragmentize_dump, SERIES_IDS, path_src
     )
 

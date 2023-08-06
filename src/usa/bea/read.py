@@ -8,13 +8,6 @@ from pandas import DataFrame
 # =============================================================================
 
 
-def read(file_name: str, path_src: str) -> DataFrame:
-
-    filepath_or_buffer = Path(path_src).joinpath(file_name)
-
-    return pd.read_csv(**get_kwargs(filepath_or_buffer))
-
-
 def get_kwargs(filepath_or_buffer):
 
     NAMES = ['source_id', 'series_id', 'period', 'subperiod', 'value']

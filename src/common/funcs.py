@@ -98,3 +98,29 @@ def get_pre_kwargs(file_name: str) -> dict[str, Any]:
         'filepath_or_buffer': Path(PATH_SRC).joinpath(file_name),
         'index_col': 0,
     }
+
+
+def get_kwargs_usa_frb_gvp_sa() -> dict[str, Any]:
+    """'T50030: Final products and nonindustrial supplies--gross value'"""
+    PATH = '/media/green-machine/KINGSTON'
+    return {
+        'filepath_or_buffer': Path(PATH).joinpath('dataset_usa_frb_gvp_sa.txt'),
+        'sep': '\s+',
+        'header': None,
+        'skiprows': 1,
+        'nrows': 29,
+        'index_col': 1
+    }
+
+
+def get_kwargs_usa_bls_ap_pc() -> dict[str, Any]:
+    PATH_SRC = '../macroeconomics'
+
+    FILE_NAME = 'usa_science_data.zip/pc.df.0.Current' or 'usa_science_data.zip/ap.df.0.Current'
+
+    return {
+        'filepath_or_buffer': Path(PATH_SRC).joinpath(FILE_NAME),
+        'sep': '\t',
+        'index_col': range(4),
+        'usecols': 1,
+    }

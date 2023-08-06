@@ -2,13 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-
-def get_columns_set(file_name: str, path_src: str) -> set[str]:
-    kwargs = {
-        'filepath_or_buffer': Path(path_src).joinpath(file_name),
-        'index_col': 0
-    }
-    return set(pd.read_csv(**kwargs).columns)
+from stats.src.common.funcs import get_pre_kwargs
 
 
 def sort_series_ids_sets(path_src: str):
@@ -38,13 +32,13 @@ def sort_series_ids_sets(path_src: str):
 # =============================================================================
 
     FILE_NAME = 'stat_can_cap.csv'
-    SERIES_IDS_CAP = get_columns_set(FILE_NAME, path_src)
+    SERIES_IDS_CAP = set(pd.read_csv(**get_pre_kwargs(FILE_NAME)).columns)
 
     FILE_NAME = 'stat_can_lab.csv'
-    SERIES_IDS_LAB = get_columns_set(FILE_NAME, path_src)
+    SERIES_IDS_LAB = set(pd.read_csv(**get_pre_kwargs(FILE_NAME)).columns)
 
     FILE_NAME = 'stat_can_prd.csv'
-    SERIES_IDS_PRD = get_columns_set(FILE_NAME, path_src)
+    SERIES_IDS_PRD = set(pd.read_csv(**get_pre_kwargs(FILE_NAME)).columns)
 
     SERIES_IDS_CAP -= SERIES_IDS_FINAL
     SERIES_IDS_LAB -= SERIES_IDS_FINAL

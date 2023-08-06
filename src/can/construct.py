@@ -30,7 +30,7 @@ def main(
     # Retrieve Series Description
     # =========================================================================
     df = pd.concat(
-        map(lambda _: pd.read_csv(**get_pre_kwargs(_), FILE_NAMES)),
+        map(lambda _: pd.read_csv(**get_pre_kwargs(_)), FILE_NAMES),
         axis=1
     )
 
