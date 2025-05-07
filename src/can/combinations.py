@@ -7,20 +7,17 @@ Created on Sat Sep 18 22:20:54 2021
 
 
 from itertools import combinations
-from pathlib import Path
 
 import pandas as pd
-from common.funcs import get_pre_kwargs
-from pandas import DataFrame
+from core.config import BASE_DIR
+from core.funcs import get_pre_kwargs
 from sklearn.metrics import r2_score
-
-PATH_EXPORT = '/home/green-machine/Downloads'
 
 FILE_NAME = 'stat_can_cap.csv'
 data = pd.read_csv(**get_pre_kwargs(FILE_NAME))
 
 
-df = DataFrame(columns=['series_id_1', 'series_id_2', 'r_2'])
+df = pd.DataFrame(columns=['series_id_1', 'series_id_2', 'r_2'])
 for pair in combinations(data.columns, 2):
     chunk = data.loc[:, list(pair)].dropna(axis=0)
     if not chunk.empty:
@@ -34,7 +31,7 @@ for pair in combinations(data.columns, 2):
         )
 FILE_NAME = 'data_composed.csv'
 kwargs = {
-    'path_or_buf': Path(PATH_EXPORT).joinpath(FILE_NAME),
+    'path_or_buf': BASE_DIR.joinpath(FILE_NAME),
     'index': False
 }
 df.to_csv(**kwargs)

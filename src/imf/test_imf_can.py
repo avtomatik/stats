@@ -3,16 +3,15 @@
 # =============================================================================
 
 
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from pandas import DataFrame
+from core.config import DATA_DIR
 
 from stats.src.can.pull import pull_by_series_id
 
 
-def pull_imf_can_gdp_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
+def pull_imf_can_gdp_by_series_id(df: pd.DataFrame, series_id: str) -> pd.DataFrame:
     # =========================================================================
     # TODO: Refactor
     # =========================================================================
@@ -25,7 +24,7 @@ def pull_imf_can_gdp_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
     return chunk.set_index('period')
 
 
-def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
+def combine_imf_can_gdp_for_year_base(year_base: int) -> pd.DataFrame:
     # =========================================================================
     # TODO: Refactor
     # =========================================================================
@@ -34,7 +33,8 @@ def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
 
     df = pd.read_csv(**get_kwargs_imf_gdp())
     df = df[
-        df.iloc[:, 1] == f'International Monetary Fund, World Economic Outlook Database, April {year_base}'
+        df.iloc[:,
+                1] == f'International Monetary Fund, World Economic Outlook Database, April {year_base}'
     ]
     df = df[df.iloc[:, 3] == 'CAN']
     return pd.concat(
@@ -46,12 +46,10 @@ def combine_imf_can_gdp_for_year_base(year_base: int) -> DataFrame:
 
 def get_kwargs_imf_gdp():
 
-    PATH_SRC = "/media/green-machine/KINGSTON"
-
     FILE_NAME = "dataset_world_imf-WEOApr2018all.xls"
 
     kwargs = {
-        "filepath_or_buffer": Path(PATH_SRC).joinpath(FILE_NAME),
+        "filepath_or_buffer": DATA_DIR.joinpath(FILE_NAME),
         "low_memory": False
     }
 
@@ -63,8 +61,6 @@ def get_kwargs_imf_gdp():
 
 def get_kwargs_can() -> dict[str, Any]:
 
-    PATH_SRC = "/media/green-machine/KINGSTON"
-
     ARCHIVE_ID = 3790031
     NAMES = ['period', 'geo', 'seas', 'prices', 'naics', 'series_id', 'value']
     USECOLS = [0, 1, 2, 3, 4, 5, 7]
@@ -74,7 +70,7 @@ def get_kwargs_can() -> dict[str, Any]:
     )
 
     return {
-        'filepath_or_buffer': Path(PATH_SRC).joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
+        'filepath_or_buffer': DATA_DIR.joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
         'header': 0,
         'names': NAMES,
         'index_col': 0,
@@ -83,7 +79,7 @@ def get_kwargs_can() -> dict[str, Any]:
     }
 
 
-def filter_df(df: DataFrame) -> DataFrame:
+def filter_df(df: pd.DataFrame) -> pd.DataFrame:
     FILTER = (
         (df.loc[:, 'naics'] == 'All industries (x 1,000,000)') &
         (df.loc[:, 'series_id'] != 'v65201756')

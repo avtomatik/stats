@@ -8,9 +8,10 @@ Created on Sun Aug  6 20:58:48 2023
 
 import os
 import re
-from pathlib import Path, PosixPath
+from pathlib import Path
 from typing import Any, Union
 
+from core.config import DATA_DIR
 from openpyxl import load_workbook
 from xlrd import open_workbook
 
@@ -25,7 +26,7 @@ def get_file_names(path_src: str):
     )
 
 
-def get_xl_sheetnames(filepath: Union[str, PosixPath]) -> list[str]:
+def get_xl_sheetnames(filepath: Union[str, Path]) -> list[str]:
     kwargs = {
         'filename': filepath,
         'readonly': True,
@@ -34,7 +35,7 @@ def get_xl_sheetnames(filepath: Union[str, PosixPath]) -> list[str]:
     return load_workbook(**kwargs).sheetnames
 
 
-def get_xl_sheetnames(filepath: Union[str, PosixPath]) -> list[str]:
+def get_xl_sheetnames(filepath: Union[str, Path]) -> list[str]:
     return open_workbook(filepath).sheet_names()
 
 
@@ -93,18 +94,16 @@ def get_pre_kwargs(file_name: str) -> dict[str, Any]:
         DESCRIPTION.
 
     """
-    PATH_SRC = '/home/green-machine/data_science/data/interim'
     return {
-        'filepath_or_buffer': Path(PATH_SRC).joinpath(file_name),
+        'filepath_or_buffer': DATA_DIR.joinpath(file_name),
         'index_col': 0,
     }
 
 
 def get_kwargs_usa_frb_gvp_sa() -> dict[str, Any]:
     """'T50030: Final products and nonindustrial supplies--gross value'"""
-    PATH = '/media/green-machine/KINGSTON'
     return {
-        'filepath_or_buffer': Path(PATH).joinpath('dataset_usa_frb_gvp_sa.txt'),
+        'filepath_or_buffer': DATA_DIR.joinpath('dataset_usa_frb_gvp_sa.txt'),
         'sep': '\s+',
         'header': None,
         'skiprows': 1,
@@ -114,12 +113,11 @@ def get_kwargs_usa_frb_gvp_sa() -> dict[str, Any]:
 
 
 def get_kwargs_usa_bls_ap_pc() -> dict[str, Any]:
-    PATH_SRC = '../macroeconomics'
 
     FILE_NAME = 'usa_science_data.zip/pc.df.0.Current' or 'usa_science_data.zip/ap.df.0.Current'
 
     return {
-        'filepath_or_buffer': Path(PATH_SRC).joinpath(FILE_NAME),
+        'filepath_or_buffer': DATA_DIR.joinpath(FILE_NAME),
         'sep': '\t',
         'index_col': range(4),
         'usecols': 1,

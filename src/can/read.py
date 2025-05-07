@@ -7,18 +7,17 @@ Created on Sun Mar 26 16:01:08 2023
 """
 
 
+import zipfile
 from functools import cache
 from pathlib import Path
-from zipfile import ZipFile
 
 import pandas as pd
-from pandas import DataFrame
 
 from .constants import MAP_READ_CAN
 
 
 @cache
-def read_can(archive_id: int) -> DataFrame:
+def read_can(archive_id: int) -> pd.DataFrame:
     """
 
 
@@ -28,7 +27,7 @@ def read_can(archive_id: int) -> DataFrame:
 
     Returns
     -------
-    DataFrame
+    pd.DataFrame
         ================== =================================
         df.index           Period
         ...                ...
@@ -51,12 +50,12 @@ def read_can(archive_id: int) -> DataFrame:
         kwargs['filepath_or_buffer'] = f'{archive_id:08n}-eng.zip'
     else:
         if Path(f'{archive_id:08n}-eng.zip').is_file():
-            kwargs['filepath_or_buffer'] = ZipFile(
+            kwargs['filepath_or_buffer'] = zipfile.ZipFile(
                 f'{archive_id:08n}-eng.zip'
             ).open(f'{archive_id:08n}.csv')
         else:
             # =============================================================================
-            # kwargs['filepath_or_buffer'] = ZipFile(io.BytesIO(
+            # kwargs['filepath_or_buffer'] = zipfile.ZipFile(io.BytesIO(
             #     requests.get(url).content)
             # ).open(f'{archive_id:08n}.csv')
             # =============================================================================
@@ -64,7 +63,7 @@ def read_can(archive_id: int) -> DataFrame:
     return pd.read_csv(**kwargs)
 
 
-def read_can_groupby(file_id: int) -> DataFrame:
+def read_can_groupby(file_id: int) -> pd.DataFrame:
     """
 
 
@@ -75,7 +74,7 @@ def read_can_groupby(file_id: int) -> DataFrame:
 
     Returns
     -------
-    DataFrame
+    pd.DataFrame
         DESCRIPTION.
 
     """
@@ -101,14 +100,14 @@ def read_can_groupby(file_id: int) -> DataFrame:
 
 
 @cache
-def read_can_sandbox(archive_id: int) -> DataFrame:
+def read_can_sandbox(archive_id: int) -> pd.DataFrame:
     """
     Parameters
     ----------
     archive_id : int
     Returns
     -------
-    DataFrame
+    pd.DataFrame
         ================== =================================
         df.index           Period
         ...                ...
@@ -164,12 +163,12 @@ def read_can_sandbox(archive_id: int) -> DataFrame:
         kwargs['filepath_or_buffer'] = f'{archive_id:08n}-eng.zip'
     else:
         if Path(f'{archive_id:08n}-eng.zip').is_file():
-            kwargs['filepath_or_buffer'] = ZipFile(
+            kwargs['filepath_or_buffer'] = zipfile.ZipFile(
                 f'{archive_id:08n}-eng.zip'
             ).open(f'{archive_id:08n}.csv')
         else:
             # =============================================================================
-            # kwargs['filepath_or_buffer'] = ZipFile(io.BytesIO(
+            # kwargs['filepath_or_buffer'] = zipfile.ZipFile(io.BytesIO(
             #     requests.get(url).content)
             # ).open(f'{archive_id:08n}.csv')
             # =============================================================================

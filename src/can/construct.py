@@ -6,18 +6,16 @@ Created on Sat Sep 18 22:20:54 2021
 """
 
 
-from pathlib import Path
-
 import pandas as pd
 from can.constants import (BLUEPRINT_CAPITAL, BLUEPRINT_LABOUR,
                            BLUEPRINT_PRODUCT)
 from can.stockpile import stockpile_can
 from common.funcs import get_pre_kwargs
+from core.config import BASE_DIR
 
 
 def main(
     series_ids: dict[str, int],
-    path_src: str = '../data/external',
     file_name: str = 'stat_can_desc.csv'
 ):
     FILE_NAMES = ('stat_can_cap.csv', 'stat_can_lab.csv', 'stat_can_prd.csv')
@@ -39,7 +37,7 @@ def main(
         df.transpose(),
         left_index=True,
         right_index=True,
-    ).transpose().to_csv(Path(path_src).joinpath(file_name))
+    ).transpose().to_csv(BASE_DIR.joinpath(file_name))
 
 
 if __name__ == '__main__':

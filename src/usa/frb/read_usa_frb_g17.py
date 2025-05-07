@@ -1,14 +1,14 @@
-from pathlib import Path
-from zipfile import ZipFile
+from zipfile import zipfile.ZipFile
 
 import pandas as pd
+from core.config import DATA_DIR
 
 pd.options.display.max_columns = 8
 
 
-PATH = '../data/external'
 FILE_NAME = 'FRB_g17.zip'
-with ZipFile(Path(PATH).joinpath(FILE_NAME)) as archive:
+
+with zipfile.ZipFile(DATA_DIR.joinpath(FILE_NAME)) as archive:
     MAP_FILES = {_.filename: _.file_size for _ in archive.filelist}
     # =====================================================================
     # Select the Largest File with min() Function

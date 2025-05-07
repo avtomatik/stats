@@ -6,25 +6,24 @@ Created on Sun Mar 26 12:48:53 2023
 @author: green-machine
 """
 
-from pathlib import Path
 
 import pandas as pd
-from pandas import DataFrame
+from core.config import BASE_DIR, DATA_DIR
 
 from stats.src.usa.bea.read import get_kwargs, read_usa_bea_pull_by_series_id
 
 
-def extract_yearly_data(df: DataFrame, column: str = "subperiod") -> DataFrame:
+def extract_yearly_data(df: pd.DataFrame, column: str = "subperiod") -> pd.DataFrame:
     # =========================================================================
     # Yearly Data
     # =========================================================================
     return df[df.loc[:, column] == 0].drop(column, axis=1)
 
 
-def fragmentize_dump(df: DataFrame, series_ids: tuple[str], path_exp: str) -> None:
+def fragmentize_dump(df: pd.DataFrame, series_ids: tuple[str]) -> None:
     for series_id in series_ids:
         kwargs = {
-            'path_or_buf': Path(path_exp).joinpath(f'dataset_usa_bea-nipa-2015-05-01-{series_id}.csv')
+            'path_or_buf': BASE_DIR.joinpath(f'dataset_usa_bea-nipa-2015-05-01-{series_id}.csv')
         }
         df.pipe(
             read_usa_bea_pull_by_series_id, series_id=series_id
@@ -33,7 +32,6 @@ def fragmentize_dump(df: DataFrame, series_ids: tuple[str], path_exp: str) -> No
 
 def main(
     file_name: str = 'dataset_usa_bea-nipa-2015-05-01.zip',
-    path_src: str = '/media/green-machine/KINGSTON'
 ) -> None:
 
     SERIES_IDS = (
@@ -48,10 +46,10 @@ def main(
         'W055RC1', 'W056RC1'
     )
 
-    pd.read_csv(**get_kwargs(Path(path_src).joinpath(file_name))).pipe(
+    pd.read_csv(**get_kwargs(DATA_DIR.joinpath(file_name))).pipe(
         extract_yearly_data
     ).pipe(
-        fragmentize_dump, SERIES_IDS, path_src
+        fragmentize_dump, SERIES_IDS
     )
 
 

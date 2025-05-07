@@ -4,7 +4,7 @@ from stats.src.can.pull import pull_by_series_id
 from stats.src.can.read import read_can
 
 
-def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
+def stockpile_can(series_ids: dict[str, int]) -> pd.DataFrame:
     """
     Parameters
     ----------
@@ -12,7 +12,7 @@ def stockpile_can(series_ids: dict[str, int]) -> DataFrame:
         DESCRIPTION.
     Returns
     -------
-    DataFrame
+    pd.DataFrame
         ================== =================================
         df.index           Period
         ...                ...

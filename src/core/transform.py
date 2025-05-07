@@ -6,8 +6,8 @@ Created on Sun Aug  6 20:58:48 2023
 @author: green-machine
 """
 
-from pandas import DataFrame
+import pandas as pd
 
 
-def transform_year_mean(df: DataFrame) -> DataFrame:
+def transform_year_mean(df: pd.DataFrame) -> pd.DataFrame:
     return df.groupby(df.index.year).mean()

@@ -8,20 +8,20 @@ Created on Sat Oct 22 12:28:16 2022
 
 
 import xml.etree.ElementTree as et
-from pathlib import Path, PosixPath
+import zipfile
+from pathlib import Path
 from typing import Union
-from zipfile import ZipFile
 
 import pandas as pd
-from pandas import DataFrame
+from core.config import DATA_DIR
 
 
-def read_usa_frb_archive(filepath: Union[str, PosixPath]) -> DataFrame:
+def read_usa_frb_archive(filepath: Union[str, Path]) -> pd.DataFrame:
     kwargs = {
         'index_col': 0,
         'skiprows': 4
     }
-    with ZipFile(filepath) as archive:
+    with zipfile.ZipFile(filepath) as archive:
         # =====================================================================
         # Select the Largest File with min() Function
         # =====================================================================
@@ -40,13 +40,12 @@ def read_usa_frb_archive(filepath: Union[str, PosixPath]) -> DataFrame:
 
 FILE_NAME = 'FRB_G17(2).csv'
 FILE_NAME = 'FRB_G17(3).csv'
-PATH_SRC = '../data/external'
 FILE_NAME = 'frb_g17_2.csv'
 FILE_NAME = 'frb_g17_3.csv'
 FILE_NAME = 'FRB_H15.zip'
 
 SERIES_ID = 'CAPUTL.B00004.S'
-filepath = Path(PATH_SRC).joinpath(FILE_NAME)
+filepath = DATA_DIR.joinpath(FILE_NAME)
 kwargs = {'filepath_or_buffer': filepath}
 # =====================================================================
 # Load
@@ -69,8 +68,9 @@ df_a = df.loc[:, SERIES_IDS].groupby(df.index.year).mean()
 df.groupby(df.index.year).mean().plot(grid=True)
 
 
-PATH_SRC = '../data/external'
+
 FILE_NAME = 'FRB_H15.zip'
 
-filepath = Path(PATH_SRC).joinpath(FILE_NAME)
+
+filepath = DATA_DIR.joinpath(FILE_NAME)
 read_usa_frb_archive(filepath)

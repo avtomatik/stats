@@ -6,16 +6,16 @@ Created on Sun Feb 13 18:09:40 2022
 @author: Alexander Mikhailov
 """
 
-from pathlib import Path
-from zipfile import ZipFile
 
+import zipfile
+import ExcelFile
 import pandas as pd
-from pandas import DataFrame, ExcelFile
+from core.config import BASE_DIR, DATA_DIR
 
 
-def read_usa_bea_meta(xl_file: ExcelFile, sheet_name: str) -> DataFrame:
+def read_usa_bea_meta(xl_file: ExcelFile, sheet_name: str) -> pd.DataFrame:
     """
-    Retrieves DataFrame for Meta Information from Bureau of Economic Analysis Zip Archives
+    Retrieves pd.DataFrame for Meta Information from Bureau of Economic Analysis Zip Archives
 
     Parameters
     ----------
@@ -24,7 +24,7 @@ def read_usa_bea_meta(xl_file: ExcelFile, sheet_name: str) -> DataFrame:
 
     Returns
     -------
-    DataFrame
+    pd.DataFrame
         ================== =================================
         df.index           Index
         df.iloc[:, 0]      Table
@@ -45,7 +45,7 @@ def read_usa_bea_meta(xl_file: ExcelFile, sheet_name: str) -> DataFrame:
     return pd.read_excel(**kwargs).transpose()
 
 
-def grab_usa_bea_archive_meta(df: DataFrame, wb_name: str, sheet_name: str) -> DataFrame:
+def grab_usa_bea_archive_meta(df: pd.DataFrame, wb_name: str, sheet_name: str) -> pd.DataFrame:
     df.columns = (
         'table', 'unit', 'frequency_period', 'service', 'data_published', 'file_created'
     )
@@ -58,13 +58,11 @@ def grab_usa_bea_archive_meta(df: DataFrame, wb_name: str, sheet_name: str) -> D
 
 
 def main(
-    path_src: str = '/media/green-machine/KINGSTON',
-    path_export: str = '/home/green-machine/Downloads',
     archive_name: str = 'dataset_usa_bea-release-2015-02-27-SectionAll_xls_1969_2015.zip',
     file_name: str = 'usa_bea_release-2015-02-27_meta.xlsx'
 ) -> None:
-    with ZipFile(Path(path_src).joinpath(archive_name)) as archive:
-        df = DataFrame()
+    with zipfile.ZipFile(DATA_DIR.joinpath(archive_name)) as archive:
+        df = pd.DataFrame()
         for wb_name in archive.namelist():
             print('{:=^50}'.format('New File'))
             with pd.ExcelFile(archive.open(wb_name)) as xl_file:
@@ -81,7 +79,7 @@ def main(
                         )
                     ]
                 )
-    df.to_csv(Path(path_export).joinpath(file_name), index=False)
+    df.to_csv(BASE_DIR.joinpath(file_name), index=False)
 
 
 if __name__ == '__main__':

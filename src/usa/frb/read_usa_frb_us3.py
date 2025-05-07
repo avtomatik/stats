@@ -7,15 +7,15 @@ Created on Fri Oct 21 21:42:17 2022
 """
 
 import io
-from zipfile import ZipFile
+import zipfile
 
+import pandas as pd
 import requests
 from lxml import etree
-from pandas import DataFrame
 
 URL = 'https://www.federalreserve.gov/datadownload/Output.aspx?rel=g17&filetype.zip'
 
-with ZipFile(io.BytesIO(requests.get(URL).content)) as archive:
+with zipfile.ZipFile(io.BytesIO(requests.get(URL).content)) as archive:
     # =========================================================================
     # Select the Largest File with min() Function
     # =========================================================================
@@ -38,4 +38,4 @@ with ZipFile(io.BytesIO(requests.get(URL).content)) as archive:
             row.extend([r.xpath('.//@TIME_PERIOD')[0],
                         r.xpath('.//@OBS_VALUE')[0]])
             rows.append(row)
-        frdf = DataFrame(rows, columns=cols)
+        frdf = pd.DataFrame(rows, columns=cols)

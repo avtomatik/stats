@@ -5,19 +5,18 @@ Created on Tue Apr 28 00:37:30 2020
 @author: Alexander Mikhailov
 """
 
-from pathlib import Path
 
 import pandas as pd
-
+from core.config import DATA_DIR
 from stats.src.common.funcs import get_file_names, get_xl_sheetnames
 
 
-def main(path_src: str = '/media/green-machine/KINGSTON'):
+def main():
 
-    for file_name in get_file_names(path_src):
-        
-        for sheet_name in get_xl_sheetnames(Path(path_src).joinpath(file_name)):
-            print(pd.read_excel(Path(path_src).joinpath(file_name), sheet_name))
+    for file_name in get_file_names(DATA_DIR):
+
+        for sheet_name in get_xl_sheetnames(DATA_DIR.joinpath(file_name)):
+            print(pd.read_excel(DATA_DIR.joinpath(file_name), sheet_name))
 
 
 if __name__ == '__main__':

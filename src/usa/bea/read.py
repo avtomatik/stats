@@ -1,7 +1,5 @@
-from pathlib import Path
 
 import pandas as pd
-from pandas import DataFrame
 
 # =============================================================================
 # Bureau of Economic Analysis
@@ -22,7 +20,7 @@ def get_kwargs(filepath_or_buffer):
     }
 
 
-def read_usa_bea_pull_by_series_id(df: DataFrame, series_id: str) -> DataFrame:
+def read_usa_bea_pull_by_series_id(df: pd.DataFrame, series_id: str) -> pd.DataFrame:
     """
     Retrieve Yearly Data for BEA Series ID
     """

@@ -1,17 +1,16 @@
-from pathlib import Path
 
 import pandas as pd
-
+from core.config import DATA_DIR
 from stats.src.common.funcs import get_pre_kwargs
 
 
-def sort_series_ids_sets(path_src: str):
+def sort_series_ids_sets():
     FILE_NAME = 'series_ids.xlsx'
     df = pd.read_excel(
-        Path(path_src).joinpath(FILE_NAME)
+        DATA_DIR.joinpath(FILE_NAME)
     ).dropna(axis=0, how='all').dropna(axis=1, how='all').fillna('None')
 # =============================================================================
-# df.to_csv(Path(path_export).joinpath(FILE_NAME), index=False)
+# df.to_csv(BASE_DIR.joinpath(FILE_NAME), index=False)
 # =============================================================================
 
     version = sorted(df.iloc[:, 0].unique())[0]
