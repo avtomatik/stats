@@ -1,4 +1,6 @@
-from zipfile import zipfile.ZipFile
+
+
+import zipfile
 
 import pandas as pd
 from core.config import DATA_DIR

@@ -1,8 +1,8 @@
 import pandas as pd
-from thesis.src.lib.transform import (transform_deflator, transform_pct_change,
-                                      transform_sum)
 
 from stats.src.can.stockpile import stockpile_can
+from thesis.src.lib.transform import (transform_deflator, transform_pct_change,
+                                      transform_sum)
 
 
 def combine_can_price_a(series_ids: tuple[dict[str, int]]) -> pd.DataFrame:

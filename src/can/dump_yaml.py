@@ -10,11 +10,11 @@ Created on Tue Jan  3 11:09:07 2023
 import yaml
 from constants import (DATA_CAPITAL_ACQUISITIONS, DATA_CAPITAL_RETIREMENT,
                        TITLES_DOUGLAS)
-from thesis.src.lib.constants import READ_USA_HIST
 
 from stats.src.can.constants import (DATA_CONSTRUCT_CAN_FORMER,
                                      DATA_CONSTRUCT_CAN_FORMER_NOT_USED,
                                      DATA_STATCAN_ARCHIVE)
+from thesis.src.lib.constants import READ_USA_HIST
 
 
 def dump(file_path, data: dict) -> None:

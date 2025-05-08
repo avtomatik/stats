@@ -49,12 +49,13 @@ def get_kwargs_imf_gdp():
     FILE_NAME = "dataset_world_imf-WEOApr2018all.xls"
 
     kwargs = {
-        "filepath_or_buffer": DATA_DIR.joinpath(FILE_NAME),
+        'filepath_or_buffer': DATA_DIR.joinpath(FILE_NAME),
         "low_memory": False
     }
 
+    FILE_NAME = 'dataset World IMF World Economic Outlook.csv'
     return {
-        "filepath_or_buffer": 'dataset World IMF World Economic Outlook.csv',
+        'filepath_or_buffer': DATA_DIR.joinpath(FILE_NAME),
         "low_memory": False
     }
 
@@ -69,8 +70,9 @@ def get_kwargs_can() -> dict[str, Any]:
         2820011, 3790031, 3800084, 10100094, 14100221, 14100235, 14100238, 14100355, 16100109, 16100111, 36100108, 36100207, 36100434
     )
 
+    FILE_NAME = f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'
     return {
-        'filepath_or_buffer': DATA_DIR.joinpath(f'dataset_can_{ARCHIVE_ID:08n}-eng.zip'),
+        'filepath_or_buffer': DATA_DIR.joinpath(FILE_NAME),
         'header': 0,
         'names': NAMES,
         'index_col': 0,

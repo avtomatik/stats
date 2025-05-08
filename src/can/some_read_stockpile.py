@@ -1,9 +1,8 @@
 
-from thesis.src.lib.stockpile import stockpile_can
-from thesis.src.lib.transform import transform_year_sum
-
 from stats.src.can.constants import CAN_GROSS_FIXED_CAPITAL_FORMATION
 from stats.src.can.read import read_can_groupby
+from thesis.src.lib.stockpile import stockpile_can
+from thesis.src.lib.transform import transform_year_sum
 
 file_id = 5245628780870031920
 file_id = 7931814471809016759

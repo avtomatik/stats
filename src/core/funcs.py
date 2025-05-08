@@ -102,8 +102,9 @@ def get_pre_kwargs(file_name: str) -> dict[str, Any]:
 
 def get_kwargs_usa_frb_gvp_sa() -> dict[str, Any]:
     """'T50030: Final products and nonindustrial supplies--gross value'"""
+    FILE_NAME = 'dataset_usa_frb_gvp_sa.txt'
     return {
-        'filepath_or_buffer': DATA_DIR.joinpath('dataset_usa_frb_gvp_sa.txt'),
+        'filepath_or_buffer': DATA_DIR.joinpath(FILE_NAME),
         'sep': '\s+',
         'header': None,
         'skiprows': 1,
